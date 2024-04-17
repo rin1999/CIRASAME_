@@ -1,7 +1,7 @@
 CITIROC_path : /home/nestdaq/okazaki/cirasame/CitirocControlSoft/bin
 HUL_path     : /home/nestdaq/okazaki/cirasame/hul-common-lib/install/bin
-YAML_path    : /home/nestdaq/okazaki/cirasame/CIRASAME_calib/yaml_files/cirasame015
-CIRASAME_ip  : 192.168.2.115
+YAML_path    : /home/nestdaq/okazaki/cirasame/CIRASAME_calib/yaml_files/cirasame002
+CIRASAME_ip  : 192.168.2.102
 DAC_scan:
   start : 100
   gap   : 5
