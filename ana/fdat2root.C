@@ -9,7 +9,7 @@
 
 void createTGraphs(TString pathName, TString dirName) {
     std::cout << "Creating TGraphs..." << std::endl;
-    TString outputName = dirName + ".root";
+    TString outputName = "~/cirasame/calib/ana/root/" + dirName + ".root";
     TFile outputFile(outputName, "RECREATE");
     if (!outputFile.IsOpen()) {
         std::cerr << "Error: Could not open output file " << outputName << std::endl;
