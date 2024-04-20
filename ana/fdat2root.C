@@ -27,7 +27,7 @@ void createTGraphs(TString pathName, TString dirName) {
             ifstream inFile(fileName.Data());
             if (!inFile.is_open()) {
                 std::cerr << "Error: Could not open file " << fileName << std::endl;
-                continue;
+                break;
             }
 
             TGraph* graphs[nChannel];
@@ -39,12 +39,17 @@ void createTGraphs(TString pathName, TString dirName) {
             
             double xVal;
             double yVals[nChannel];
+            int ncount = 0;
             while (inFile >> xVal) {
                for (int iChannel = 1; iChannel <= nChannel; ++iChannel) {
                   inFile >> yVals[iChannel];
                   graphs[iChannel]->AddPoint(xVal, yVals[iChannel]);
                }
+               ncount++;
             }
+            
+            TString logtext =  Form("CIRASAME %03d ASIC %02d had %d counts", iCIRASAME, iASIC, ncount);
+            std::cout << logtext << std::endl;
             inFile.close();
 
             for (int iChannel = 1; iChannel <= nChannel; ++iChannel) {
@@ -64,6 +69,6 @@ void fdat2root(TString pathName) {
     TObjArray *tokens = pathName.Tokenize("/");
     TString dirName = ((TObjString *)(tokens->Last()))->GetString();
     createTGraphs(pathName, dirName);
-    delete tokens;    
+    delete tokens;
     std::cout << "fdat2root macro completed." << std::endl;
 }

@@ -7,8 +7,10 @@
 #include <TCanvas.h>
 #include <TLine.h>
 #include <TLatex.h>
+#include <TPDF.h>
 
-double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel, TFile* file, std::ofstream& outputFile) {
+double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel, TFile* file,
+                       std::ofstream& outputFile, TString outputPDFFileName) {
     // Open the ROOT file
     //TFile* file = TFile::Open(fileName);
     //if (!file || file->IsZombie()) {
@@ -20,7 +22,7 @@ double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel
     TGraph* graph = dynamic_cast<TGraph*>(file->Get(Form("g%03d_%02d_%02d", iCIRASAME, iASIC, iChannel)));
     if (!graph) {
         std::cerr << "Error: TGraph " << Form("g%03d_%02d_%02d", iCIRASAME, iASIC, iChannel) << " not found in file." << std::endl;
-        file->Close();
+//        file->Close();
         return -1;
     }
 
@@ -82,7 +84,7 @@ double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel
     fitFunc->SetParLimits(9, 0.01, 0.5);
 
     // Display the histogram
-    TCanvas* canvas = new TCanvas("canvas", "Analysis Canvas", 800, 1600);
+    TCanvas* canvas = new TCanvas("canvas", "Analysis Canvas", 1600, 1600);
     canvas->Divide(1, 2);
     canvas->SetLogy();
     canvas->cd(1);
@@ -94,8 +96,7 @@ double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel
     hist->Fit(fitFunc, "R");
     canvas->cd(2);
     canvas->Draw();
-
-    //
+    
     // Get the count rates of 1 p.e., 2 p.e., and 3 p.e.
     double countRate1pe = fitFunc->GetParameter(1);
     double countRate2pe = fitFunc->GetParameter(4);
@@ -153,9 +154,10 @@ double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel
     }
     DAC1pe/=Ninterval12;
     DAC2pe/=Ninterval23;
+    Double_t gain = DAC2pe - DAC1pe;
 
-    std::cout << "DAC1pe " << DAC1pe << " DAC2pe " << DAC2pe << std::endl;
-
+    // Displaying the fit result in the panel
+    std::cout << "DAC1pe " << DAC1pe << " DAC2pe " << DAC2pe << "Gain(DAC2pe-DAC1pe) " << gain << std::endl;
     canvas->cd(1);
     TLine* line1 = new TLine(DAC1pe, 0, DAC1pe, graphYMax);
     TLine* line2 = new TLine(DAC2pe, 0, DAC2pe, graphYMax);
@@ -165,20 +167,26 @@ double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel
     line2->Draw();
 //    TString* stringGain = new TString("%f", DAC2pe-DAC1pe);
 //    TLatex* textGain = new TLatex(400, 1e6, stringGain->Data());
-    TLatex* textGain = new TLatex(400, 1e6, Form("Gain(DAC) = %4.2f", DAC2pe-DAC1pe));
+    TLatex* textGain = new TLatex(200, 1e6, Form("Gain(%03i %02i %02i) = %4.2f", iCIRASAME, iASIC, iChannel, gain));
     textGain->Draw();
-    //canvas->SetBatch(kTRUE);
-    canvas->Update();
-    //canvas->SaveAs("pulseheightfit.pdf");
-    canvas->SaveAs(Form("pic/pulseheight%03d_%02d_%02d.pdf", iCIRASAME, iASIC, iChannel));
-    // Close the file
+    
+    graph->GetXaxis()->SetLimits(0.0, 500.0);
+    graph->GetHistogram()->SetMinimum(1.0);
+    graph->GetHistogram()->SetMaximum(1e8);
+//    graph->GetXaxis()->SetRangeUser(0.0, 500.0);
+//    graph->GetYaxis()->SetRangeUser(0.0, 1e8);
+    
+    canvas->Print(outputPDFFileName);
+    delete canvas;
+    delete graph;
+    //canvas->SaveAs(Form("pic/pulseheight%03d_%02d_%02d.pdf", iCIRASAME, iASIC, iChannel));
     return DAC2pe-DAC1pe;
 }
 
 void pulseheightfit_all(const char* fileName) {
-    // Replace "rootFile.root" with the path to your ROOT file
    TFile* inputFile = TFile::Open(fileName);
    TString outputFileName = "pulseheightfit_all.out";
+   TString outputPDFFileName = "pulseheightfit_all.pdf";
    Double_t DAC21;
    
    Int_t nCIRASAME = 18;
@@ -186,27 +194,36 @@ void pulseheightfit_all(const char* fileName) {
    Int_t nChannel = 32;
    
    if (!inputFile || inputFile->IsZombie()) {
-       std::cerr << "Error: Unable to open file " << fileName << std::endl;
+      std::cerr << "Error: Unable to open file " << fileName << std::endl;
    }
    std::ofstream outputFile(outputFileName);
+   
+   TCanvas* canvas2 = new TCanvas("canvas2", "Summary", 1600, 1600);
 
-   TH1F* h_all = new TH1F("h_all", "Gain distribution", 100, 0, 100);
+   // Open a PDF file
+   TCanvas *dummyCanvas = new TCanvas("dummyCanvas", "Dummy Canvas", 1600, 1600);
+   dummyCanvas->Print(outputPDFFileName+"[");
+   delete dummyCanvas;
+   
+   TH1F* h_gain = new TH1F("h_gain", "Gain distribution", 100, 0, 100);
    for(int iCIRASAME=1; iCIRASAME<=nCIRASAME; ++iCIRASAME){
       for(int iASIC=1; iASIC<=nASIC; ++iASIC){
          for(int iChannel=1; iChannel<=nChannel; ++iChannel){
-            DAC21 = analyzeRootFile(fileName, iCIRASAME, iASIC, iChannel, inputFile, outputFile);
+            DAC21 = analyzeRootFile(fileName, iCIRASAME, iASIC, iChannel, inputFile, outputFile, outputPDFFileName);
             outputFile << iCIRASAME << " " << iASIC << " " << iChannel << " " << DAC21 << std::endl;
-            h_all->Fill(DAC21);
+            h_gain->Fill(DAC21);
          }
       }
    }
 
+   h_gain->Draw();
+   canvas2->Print(outputPDFFileName);
    
-    TCanvas* canvas2 = new TCanvas("canvas2", "Analysis Canvas", 800, 800);
-    canvas2->cd(1);
-    h_all->Draw();
-    canvas2->Update();
-    canvas2->SaveAs("pulseheightfit_all2.pdf");
+   // Close the PDF file
+   TCanvas *finalCanvas = new TCanvas("finalCanvas", "Final Canvas", 1600, 1600);
+   finalCanvas->Print(outputPDFFileName+"]");
+   delete finalCanvas;
+   
+   inputFile->Close();
 
-    inputFile->Close();
 }

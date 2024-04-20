@@ -5,7 +5,7 @@
 #include <TF1.h>
 #include <TCanvas.h>
 
-void analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel) {
+void analyzeRootFile(const char* fileName) {
     // Open the ROOT file
     TFile* file = TFile::Open(fileName);
     if (!file || file->IsZombie()) {
@@ -14,9 +14,9 @@ void analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel) 
     }
 
     // Retrieve the TGraph from the file
-    TGraph* graph = dynamic_cast<TGraph*>(file->Get(Form("g%03d_%02d_%02d", iCIRASAME, iASIC, iChannel)));
+    TGraph* graph = dynamic_cast<TGraph*>(file->Get("g018_04_03");
     if (!graph) {
-        std::cerr << "Error: TGraph " << Form("g%03d_%02d_%02d", iCIRASAME, iASIC, iChannel) << " not found in file." << std::endl;
+        std::cerr << "Error: TGraph not found in file." << std::endl;
         file->Close();
         return;
     }
@@ -165,21 +165,11 @@ void analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel) 
     TLatex* textGain = new TLatex(400, 1e6, Form("Gain(DAC) = %4.2f", DAC2pe-DAC1pe));
     textGain->Draw();
     canvas->Update();
-    //canvas->SaveAs("pulseheightfit.pdf");
-    canvas->SaveAs(Form("pic/pulseheight%03d_%02d_%02d.pdf", iCIRASAME, iASIC, iChannel));
+    canvas->SaveAs("pulseheightfit.pdf");
     // Close the file
     // file->Close();
 }
 
 void pulseheightfit(const char* fileName) {
-    // Replace "rootFile.root" with the path to your ROOT file
-    for (int iCIRASAME = 1, iCIRASAME<=18, iCIRASAME++){
-      for (int iASIC = 1, iASIC<=4, iASIC++){
-         for (int iChannel = 1, iChannel<=32, iChannel++){
-            analyzeRootFile(fileName, iCIRASAME, iASIC, iChannel);
-         }
-         
-      }
-    }
-    
+   analyzeRootFile(fileName);
 }
