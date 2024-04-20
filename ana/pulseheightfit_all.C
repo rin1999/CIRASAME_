@@ -1,31 +1,34 @@
 #include <iostream>
+#include <fstream>
 #include <TFile.h>
 #include <TGraph.h>
 #include <TH1F.h>
 #include <TF1.h>
 #include <TCanvas.h>
+#include <TLine.h>
+#include <TLatex.h>
 
-void analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel) {
+double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel, TFile* file, std::ofstream& outputFile) {
     // Open the ROOT file
-    TFile* file = TFile::Open(fileName);
-    if (!file || file->IsZombie()) {
-        std::cerr << "Error: Unable to open file " << fileName << std::endl;
-        return;
-    }
+    //TFile* file = TFile::Open(fileName);
+    //if (!file || file->IsZombie()) {
+    //    std::cerr << "Error: Unable to open file " << fileName << std::endl;
+    //    return -1;
+    //}
 
     // Retrieve the TGraph from the file
     TGraph* graph = dynamic_cast<TGraph*>(file->Get(Form("g%03d_%02d_%02d", iCIRASAME, iASIC, iChannel)));
     if (!graph) {
         std::cerr << "Error: TGraph " << Form("g%03d_%02d_%02d", iCIRASAME, iASIC, iChannel) << " not found in file." << std::endl;
         file->Close();
-        return;
+        return -1;
     }
 
     // Dump row values to stdout
     std::cout << "Row Values:" << std::endl;
-    for (int i = 0; i < graph->GetN(); ++i) {
-       std::cout << "Row " << i << ": x = " << graph->GetX()[i] << ", y = " << graph->GetY()[i] << ", log_y = " << TMath::Log10(graph->GetY()[i]) << std::endl;
-    }
+    //for (int i = 0; i < graph->GetN(); ++i) {
+    //   std::cout << "Row " << i << ": x = " << graph->GetX()[i] << ", y = " << graph->GetY()[i] << ", log_y = " << TMath::Log10(graph->GetY()[i]) << std::endl;
+    //}
     double graphYMax = graph->GetYaxis()->GetXmax();
 
     // Create a histogram to store the log-transformed y values
@@ -40,7 +43,7 @@ void analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel) 
         double y_value = graph->GetY()[i];
         if (y_value <= 0) continue; // Skip non-positive values
         double log_y = TMath::Log10(y_value);
-        std::cout << "filling " << log_y << std::endl;
+        //std::cout << "filling " << log_y << std::endl;
         hist->Fill(log_y);
     }
 
@@ -111,28 +114,28 @@ void analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel) 
     for (int i = 0; i < numPoints; ++i) {
         double x, y;
         graph->GetPoint(i, x, y);
-        std::cout << "Point " << i << ": x = " << x << ", logy = " << TMath::Log10(y) << std::endl;
+        //std::cout << "Point " << i << ": x = " << x << ", logy = " << TMath::Log10(y) << std::endl;
 
         if (TMath::Abs(TMath::Log10(y)-countRate1pe) < 0.2) {
            is1pefound = true;
-           std::cout << " this data point belongs to the 1 photon-equivalent" << std::endl;
+           //std::cout << " this data point belongs to the 1 photon-equivalent" << std::endl;
         } else if ((TMath::Abs(TMath::Log10(y)-countRate1pe) >= 0.2) &&
                    (is1pefound == true) && (TMath::Abs(TMath::Log10(y)-countRate2pe) >= 0.2) &&
                    (is2pefound == false)) {
            DAC1pe += x;
            Ninterval12++;
-           std::cout << "Interval 1 and 2 " << std::endl;
+           //std::cout << "Interval 1 and 2 " << std::endl;
         } else if ((TMath::Abs(TMath::Log10(y)-countRate2pe) < 0.2) && (is1pefound == true)) {
            is2pefound = true;
-           std::cout << " this data point belongs to the 2 photon-equivalent" << std::endl;
+           //std::cout << " this data point belongs to the 2 photon-equivalent" << std::endl;
         } else if ((TMath::Abs(TMath::Log10(y)-countRate2pe) >= 0.2) && (is2pefound == true) &&
                    (TMath::Abs(TMath::Log10(y)-countRate3pe) >= 0.2) && (is3pefound == false)) {
            DAC2pe += x;
            Ninterval23++;
-           std::cout << "Interval 2 and 3 " << std::endl;
+           //std::cout << "Interval 2 and 3 " << std::endl;
         } else if ((TMath::Abs(TMath::Log10(y)-countRate3pe) < 0.2) && (is2pefound == true)) {
            is3pefound = true;
-           std::cout << " this data point belongs to the 3 photon-equivalent" << std::endl;
+           //std::cout << " this data point belongs to the 3 photon-equivalent" << std::endl;
         }
 
 /*        if ((TMath::Abs(TMath::Log10(y)-countRate3pe) < 0.2) && (is2pefound == true)) {
@@ -164,21 +167,46 @@ void analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel) 
 //    TLatex* textGain = new TLatex(400, 1e6, stringGain->Data());
     TLatex* textGain = new TLatex(400, 1e6, Form("Gain(DAC) = %4.2f", DAC2pe-DAC1pe));
     textGain->Draw();
+    //canvas->SetBatch(kTRUE);
     canvas->Update();
     //canvas->SaveAs("pulseheightfit.pdf");
     canvas->SaveAs(Form("pic/pulseheight%03d_%02d_%02d.pdf", iCIRASAME, iASIC, iChannel));
     // Close the file
-    // file->Close();
+    return DAC2pe-DAC1pe;
 }
 
-void pulseheightfit(const char* fileName) {
+void pulseheightfit_all(const char* fileName) {
     // Replace "rootFile.root" with the path to your ROOT file
-      for(int iCIRASAME=1, iCIRASAME<=18, iCIRASAME++){
-         for(int iASIC=1, iASIC<=4, iASIC++){
-            for(int iChannel=1, iChannel<=32, iChannel++){
-               analyzeRootFile(fileName, iCIRASAME, iASIC, iChannel);
-            }
+   TFile* inputFile = TFile::Open(fileName);
+   TString outputFileName = "pulseheightfit_all.out";
+   Double_t DAC21;
+   
+   Int_t nCIRASAME = 18;
+   Int_t nASIC = 4;
+   Int_t nChannel = 32;
+   
+   if (!inputFile || inputFile->IsZombie()) {
+       std::cerr << "Error: Unable to open file " << fileName << std::endl;
+   }
+   std::ofstream outputFile(outputFileName);
+
+   TH1F* h_all = new TH1F("h_all", "Gain distribution", 100, 0, 100);
+   for(int iCIRASAME=1; iCIRASAME<=nCIRASAME; ++iCIRASAME){
+      for(int iASIC=1; iASIC<=nASIC; ++iASIC){
+         for(int iChannel=1; iChannel<=nChannel; ++iChannel){
+            DAC21 = analyzeRootFile(fileName, iCIRASAME, iASIC, iChannel, inputFile, outputFile);
+            outputFile << iCIRASAME << " " << iASIC << " " << iChannel << " " << DAC21 << std::endl;
+            h_all->Fill(DAC21);
          }
       }
-    
+   }
+
+   
+    TCanvas* canvas2 = new TCanvas("canvas2", "Analysis Canvas", 800, 800);
+    canvas2->cd(1);
+    h_all->Draw();
+    canvas2->Update();
+    canvas2->SaveAs("pulseheightfit_all2.pdf");
+
+    inputFile->Close();
 }
