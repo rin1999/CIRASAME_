@@ -4,6 +4,6 @@ YAML_path    : ../CIRASAME_calib/yaml_files/cirasame002
 CIRASAME_ip  : 192.168.2.102
 DAC_scan:
   start : 100
-  gap   : 5
-  steps : 80
+  gap   : 3
+  steps : 70
 FILE_name    : aaa
