@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <regex>
 #include <TFile.h>
 #include <TGraph.h>
 #include <TH1F.h>
@@ -8,21 +9,14 @@
 #include <TLine.h>
 #include <TLatex.h>
 #include <TPDF.h>
+#include <TRegexp.h>
 
 double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel, TFile* file,
-                       std::ofstream& outputFile, TString outputPDFFileName) {
-    // Open the ROOT file
-    //TFile* file = TFile::Open(fileName);
-    //if (!file || file->IsZombie()) {
-    //    std::cerr << "Error: Unable to open file " << fileName << std::endl;
-    //    return -1;
-    //}
-
+                       TString outputPDFFileName) {
     // Retrieve the TGraph from the file
     TGraph* graph = dynamic_cast<TGraph*>(file->Get(Form("g%03d_%02d_%02d", iCIRASAME, iASIC, iChannel)));
     if (!graph) {
         std::cerr << "Error: TGraph " << Form("g%03d_%02d_%02d", iCIRASAME, iASIC, iChannel) << " not found in file." << std::endl;
-//        file->Close();
         return -1;
     }
 
@@ -139,25 +133,13 @@ double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel
            //std::cout << " this data point belongs to the 3 photon-equivalent" << std::endl;
         }
 
-/*        if ((TMath::Abs(TMath::Log10(y)-countRate3pe) < 0.2) && (is2pefound == true)) {
-           std::cout << " this data point belongs to the 3 photon-equivalent" << std::endl;
-        } else if ((TMath::Abs(TMath::Log10(y)-countRate2pe) < 0.2) && (is1pefound == true)) {
-           maxDAC2pe = x;
-           is2pefound = true;
-           std::cout << " this data point belongs to the 2 photon-equivalent" << std::endl;
-        } else if (TMath::Abs(TMath::Log10(y)-countRate1pe) < 0.2) {
-           maxDAC1pe = x;
-           is1pefound = true;
-           std::cout << " this data point belongs to the 1 photon-equivalent" << std::endl;
-        }
-*/
     }
     DAC1pe/=Ninterval12;
     DAC2pe/=Ninterval23;
     Double_t gain = DAC2pe - DAC1pe;
 
     // Displaying the fit result in the panel
-    std::cout << "DAC1pe " << DAC1pe << " DAC2pe " << DAC2pe << "Gain(DAC2pe-DAC1pe) " << gain << std::endl;
+    std::cout << "DAC1pe " << DAC1pe << " DAC2pe " << DAC2pe << " Gain(DAC2pe-DAC1pe) " << gain << std::endl;
     canvas->cd(1);
     TLine* line1 = new TLine(DAC1pe, 0, DAC1pe, graphYMax);
     TLine* line2 = new TLine(DAC2pe, 0, DAC2pe, graphYMax);
@@ -165,16 +147,12 @@ double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel
     line1->Draw();    
     line2->SetLineColor(kRed); // Set line color to red
     line2->Draw();
-//    TString* stringGain = new TString("%f", DAC2pe-DAC1pe);
-//    TLatex* textGain = new TLatex(400, 1e6, stringGain->Data());
     TLatex* textGain = new TLatex(200, 1e6, Form("Gain(%03i %02i %02i) = %4.2f", iCIRASAME, iASIC, iChannel, gain));
     textGain->Draw();
     
     graph->GetXaxis()->SetLimits(0.0, 500.0);
     graph->GetHistogram()->SetMinimum(1.0);
     graph->GetHistogram()->SetMaximum(1e8);
-//    graph->GetXaxis()->SetRangeUser(0.0, 500.0);
-//    graph->GetYaxis()->SetRangeUser(0.0, 1e8);
     
     canvas->Print(outputPDFFileName);
     delete canvas;
@@ -183,11 +161,27 @@ double analyzeRootFile(const char* fileName,int iCIRASAME,int iASIC,int iChannel
     return DAC2pe-DAC1pe;
 }
 
-void pulseheightfit_all(const char* fileName) {
+void pulseheightfit_all(TString fileName) {
+   std::cout << "original string " << fileName << std::endl;
    TFile* inputFile = TFile::Open(fileName);
-   TString outputFileName = "pulseheightfit_all.out";
-   TString outputPDFFileName = "pulseheightfit_all.pdf";
+//    TRegexp re("[0-9]{8}_[0-9]{4}");
+   TRegexp re("[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9]");
+   Ssiz_t pos = fileName.Index(re);
+   TString matchedPart, outputOutFileName, outputPDFFileName, outputPDFDir, outputOutDir;
    Double_t DAC21;
+   std::ofstream outputFile;
+   
+   outputOutDir = "~/cirasame/calib/ana/out";
+   outputPDFDir = "~/cirasame/calib/ana/pic";
+   
+   if (pos != kNPOS) {
+      matchedPart = fileName(pos, 13); // 8 digits + "_" + 4 digits = 13 characters
+      std::cout << "Matched part: " << matchedPart.Data() << std::endl;
+   } else {
+      std::cout << "Pattern not found in the input string." << std::endl;
+   }
+   outputOutFileName = outputOutDir + "/pulseheightfit_all_" + matchedPart + ".out";
+   outputPDFFileName = outputPDFDir + "/pulseheightfit_all_" + matchedPart + ".pdf";
    
    Int_t nCIRASAME = 18;
    Int_t nASIC = 4;
@@ -196,11 +190,9 @@ void pulseheightfit_all(const char* fileName) {
    if (!inputFile || inputFile->IsZombie()) {
       std::cerr << "Error: Unable to open file " << fileName << std::endl;
    }
-   std::ofstream outputFile(outputFileName);
+   outputFile.open(outputOutFileName);
    
    TCanvas* canvas2 = new TCanvas("canvas2", "Summary", 1600, 1600);
-
-   // Open a PDF file
    TCanvas *dummyCanvas = new TCanvas("dummyCanvas", "Dummy Canvas", 1600, 1600);
    dummyCanvas->Print(outputPDFFileName+"[");
    delete dummyCanvas;
@@ -209,13 +201,12 @@ void pulseheightfit_all(const char* fileName) {
    for(int iCIRASAME=1; iCIRASAME<=nCIRASAME; ++iCIRASAME){
       for(int iASIC=1; iASIC<=nASIC; ++iASIC){
          for(int iChannel=1; iChannel<=nChannel; ++iChannel){
-            DAC21 = analyzeRootFile(fileName, iCIRASAME, iASIC, iChannel, inputFile, outputFile, outputPDFFileName);
+            DAC21 = analyzeRootFile(fileName, iCIRASAME, iASIC, iChannel, inputFile, outputPDFFileName);
             outputFile << iCIRASAME << " " << iASIC << " " << iChannel << " " << DAC21 << std::endl;
             h_gain->Fill(DAC21);
          }
       }
    }
-
    h_gain->Draw();
    canvas2->Print(outputPDFFileName);
    
@@ -225,5 +216,6 @@ void pulseheightfit_all(const char* fileName) {
    delete finalCanvas;
    
    inputFile->Close();
-
+   outputFile.close();
+   
 }
