@@ -343,6 +343,8 @@ void pulseheightfit_all(TString fileName) {
       }
    }
    h_gain->Draw();
+   canvas2->Print(outputPDFFileName);
+   canvas2->Clear();
    g_idgain->Draw();
    canvas2->Print(outputPDFFileName);
    
