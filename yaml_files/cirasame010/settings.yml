@@ -3,7 +3,7 @@ HUL_path     : ../hul-common-lib/install/bin
 YAML_path    : ../CIRASAME_calib/yaml_files/cirasame010
 CIRASAME_ip  : 192.168.2.110
 DAC_scan:
-  start : 100
-  gap   : 5
-  steps : 80
+  start : 150
+  gap   : 3
+  steps : 70
 FILE_name    : aaa
