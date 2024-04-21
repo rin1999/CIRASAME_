@@ -1,6 +1,13 @@
 data
 venv
 *.so
+*.d
+.nfs*
+ana/.root_hist
+yaml_files.bk/
+ana/*ACLiC*
+
+
 
 
 
