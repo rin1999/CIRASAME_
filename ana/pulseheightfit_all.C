@@ -154,10 +154,12 @@ double analyzeRootFile(const char* fileName, Int_t canvasDimentionX, Int_t canva
     double DACMax = 500;
 
     std::ofstream logFile;
-    TString logFileName = Form("pulseheightfit_all-%03i-%02i-%03i.log", iCIRASAME, iASIC, iChannel);
-    logFile.open(logFileName);
-    if (!logFile.is_open()) {
-       std::cout << "Error: Unable to open file " << logFileName << std::endl;
+    if (DEBUG==2) {
+       TString logFileName = Form("pulseheightfit_all-%03i-%02i-%03i.log", iCIRASAME, iASIC, iChannel);
+       logFile.open(logFileName);
+       if (!logFile.is_open()) {
+          std::cout << "Error: Unable to open file " << logFileName << std::endl;
+       }
     }
     
     if (DEBUG) {
@@ -171,43 +173,42 @@ double analyzeRootFile(const char* fileName, Int_t canvasDimentionX, Int_t canva
         } else {
            log10y = TMath::Log10(y);
         }
-        if (DEBUG==2) {
-           messagestring.Form("   %8i     %8i    %8.3f", int(x), int(y), log10y);
-           std::cout << messagestring << std::endl;
-           logFile << messagestring << std::endl;
-        }
+        messagestring.Form(" %8i     %8i    %8.3f", int(x), int(y), log10y);
+        if (DEBUG==1) std::cout << messagestring << std::endl;
+        if (DEBUG==2) logFile << messagestring;
 
         if (TMath::Abs(log10y-countRate1peLog10) < countRate1peLog10Sigma) {
            is1pefound = true;
-           messagestring.Form(" %8i %8i belongs to the 1 photon-equivalent", int(x), int(y));
-           std::cout << messagestring << std::endl;
-           if (DEBUG==2) logFile << messagestring << std::endl;
+           messagestring.Form("   belongs to the 1 photon-equivalent");
+//           std::cout << messagestring << std::endl;
+           if (DEBUG==2) logFile << messagestring;
         } else if ((TMath::Abs(log10y-countRate1peLog10) >= countRate1peLog10Sigma) &&
                    (is1pefound == true) && (TMath::Abs(log10y-countRate2peLog10) >= 0.2) &&
                    (is2pefound == false)) {
            TransitionEdge1pe2pe += x;
            Ninterval12++;
-           messagestring.Form(" %8i %8i Transition edge between  1pe and 2pe", int(x), int(y));
-           std::cout << messagestring << std::endl;
-           if (DEBUG==2) logFile << messagestring << std::endl;
+           messagestring.Form("   Transition edge between 1pe and 2pe");
+//           std::cout << messagestring << std::endl;
+           if (DEBUG==2) logFile << messagestring;
         } else if ((TMath::Abs(log10y-countRate2peLog10) < countRate2peLog10Sigma) && (is1pefound == true)) {
            is2pefound = true;
-           messagestring.Form(" %8i %8i belongs to the 2 photon-equivalent", int(x), int(y));
-           std::cout << messagestring << std::endl;
-           if (DEBUG==2) logFile << messagestring << std::endl;
+           messagestring.Form("   belongs to the 2 photon-equivalent");
+//           std::cout << messagestring << std::endl;
+           if (DEBUG==2) logFile << messagestring;
         } else if ((TMath::Abs(log10y-countRate2peLog10) >= countRate2peLog10Sigma) && (is2pefound == true) &&
-                   (TMath::Abs(log10y-countRate3peLog10) >= countRate2peLog10Sigma) && (is3pefound == false)) {
+                   (TMath::Abs(log10y-countRate3peLog10) >= countRate3peLog10Sigma) && (is3pefound == false)) {
            TransitionEdge2pe3pe += x;
            Ninterval23++;
-           messagestring.Form(" %8i %8i Transition edge between  2pe and 3pe", int(x), int(y));
-           std::cout << messagestring << std::endl;
-           if (DEBUG==2) logFile << messagestring << std::endl;
+           messagestring.Form("   Transition edge between 2pe and 3pe");
+//           std::cout << messagestring << std::endl;
+           if (DEBUG==2) logFile << messagestring;
         } else if ((TMath::Abs(log10y-countRate3peLog10) < countRate3peLog10Sigma) && (is2pefound == true)) {
            is3pefound = true;
-           if (DEBUG==2) messagestring.Form(" %8i %8i belongs to the 3 photon-equivalent", int(x), int(y));
-           std::cout << messagestring << std::endl;
-           logFile << messagestring << std::endl;
+           messagestring.Form("   belongs to the 3 photon-equivalent");
+           if (DEBUG==2) logFile << messagestring;
+//           std::cout << messagestring << std::endl;
         }
+        if (DEBUG==2) logFile << std::endl;
     }
     Double_t gain = 0.0;
     if (std::isnan(TransitionEdge1pe2pe) || std::isnan(TransitionEdge2pe3pe)) {
@@ -323,20 +324,26 @@ void pulseheightfit_all(TString fileName) {
    dummyCanvas->Print(outputPDFFileName+"[");
    delete dummyCanvas;
    
-   TH1F* h_gain = new TH1F("h_gain", "Gain distribution", 100, 0, 100);
+   TH1F* h_gain = new TH1F("h_gain", "Gain distribution", 50, 0, 100);
+   TGraph* g_idgain = new TGraph(); // 0, 2304, 0, 70;
    h_gain->GetXaxis()->SetTitle("Gain in ADC value");
-   h_gain->GetXaxis()->SetTitle("Count");
+   h_gain->GetYaxis()->SetTitle("Count");
+   g_idgain->GetXaxis()->SetTitle("Global Channel");
+   g_idgain->GetYaxis()->SetTitle("Gain (ADC)");
    for(int iCIRASAME=1; iCIRASAME<=nCIRASAME; ++iCIRASAME){
       for(int iASIC=1; iASIC<=nASIC; ++iASIC){
          for(int iChannel=1; iChannel<=nChannel; ++iChannel){
             gain = analyzeRootFile(fileName, canvasDimentionX, canvasDimentionY,
                                     iCIRASAME, iASIC, iChannel, inputFile, outputPDFFileName);
             h_gain->Fill(gain);
-            outputFile << iCIRASAME << " " << iASIC << " " << iChannel << " " << gain << std::endl;
+            Int_t gChannel = 128*(iCIRASAME-1) + 32*(iASIC-1) + iChannel;
+            g_idgain->AddPoint(gChannel, gain);
+            outputFile << gChannel << " " << iCIRASAME << " " << iASIC << " " << iChannel << " " << gain << std::endl;
          }
       }
    }
    h_gain->Draw();
+   g_idgain->Draw();
    canvas2->Print(outputPDFFileName);
    
    // Close the PDF file
