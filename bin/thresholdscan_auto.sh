@@ -17,9 +17,7 @@ begin=$2
 end=$3
 runname=$4
 
-#command="python3 scaler_reader.py -n cirasame003_$date -s yml/cirasame003/settings.yml"
-command="echo python3 scaler_reader.py"
-
+command="python3 scaler_reader.py"
 
 cd ~/cirasame/calib
 for ((i = begin; i <= end; i++)); do
