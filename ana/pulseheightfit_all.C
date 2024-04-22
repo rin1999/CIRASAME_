@@ -326,10 +326,10 @@ void pulseheightfit_all(TString fileName) {
    
    TH1F* h_gain = new TH1F("h_gain", "Gain distribution", 50, 0, 100);
    TGraph* g_idgain = new TGraph(); // 0, 2304, 0, 70;
-   h_gain->GetXaxis()->SetTitle("Gain in ADC value");
+   h_gain->GetXaxis()->SetTitle("Gain in DAC value");
    h_gain->GetYaxis()->SetTitle("Count");
    g_idgain->GetXaxis()->SetTitle("Global Channel");
-   g_idgain->GetYaxis()->SetTitle("Gain (ADC)");
+   g_idgain->GetYaxis()->SetTitle("Gain (DAC)");
    for(int iCIRASAME=1; iCIRASAME<=nCIRASAME; ++iCIRASAME){
       for(int iASIC=1; iASIC<=nASIC; ++iASIC){
          for(int iChannel=1; iChannel<=nChannel; ++iChannel){
