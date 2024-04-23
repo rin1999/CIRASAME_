@@ -71,6 +71,8 @@ window = sg.Window('scaler reader', layout)
 
 t_start = time.time()
 
+with open(YAML_PATH+'/RegisterValue.yml', 'r') as f:
+    savefile = yaml.safe_load(f)
 
 #main part of reading scaler
 for dac in scan_dac_value:
@@ -100,11 +102,18 @@ for dac in scan_dac_value:
     print(yml_RegVal['CITIROC1']['DAC2 code'])
     
 t_end = time.time()
+with open(YAML_PATH+'/RegisterValue.yml', 'w') as f:
+    yaml.dump(savefile, f)
 
 # rewriting binary data to decimal data
 for i in scan_dac_value:
     i = int(i)
-    output_str = sub.run(['od', '-Ad', '-td', '-v', 'data/'+args.name+'/binary/dataBin{}.dat'.format(str(i))], capture_output=True, text=True).stdout
+    #    output_str = sub.run(['od', '-Ad', '-td', '-v', 'data/'+args.name+'/binary/dataBin{}.dat'.format(str(i))], stdout=sub.PIPE, text=True)
+    # Run the command and capture stdout as bytes
+    output_bytes = sub.run(['od', '-Ad', '-td', '-v', 'data/'+args.name+'/binary/dataBin{}.dat'.format(str(i))], stdout=sub.PIPE).stdout
+
+    # Decode stdout to a string
+    output_str = output_bytes.decode('utf-8')  # Assuming UTF-8 encoding, adjust as needed
     #print(output_str)
     with open('data/'+args.name+'/decimal/dataDec{}.txt'.format(str(i)), 'w') as f:
         f.write(output_str)
