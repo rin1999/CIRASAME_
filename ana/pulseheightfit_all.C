@@ -66,7 +66,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     TF1* fitFunc = new TF1("fitFunc", "gaus(0) + gaus(3) + gaus(6) + [9]", hist->GetXaxis()->GetXmin(), hist->GetXaxis()->GetXmax());
 
     // Set the fitting range (e.g., from -1 to 1 in log scale)
-    double fitRangeMin = 2.0; // Set the minimum value for fitting region
+    double fitRangeMin = 3.0; // Set the minimum value for fitting region
     double fitRangeMax = 8.0;  // Set the maximum value for fitting region
     fitFunc->SetRange(fitRangeMin, fitRangeMax);    
 
@@ -80,19 +80,19 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
 
     // Set initial parameters for the second Gaussian
     fitFunc->SetParameter(3, 4.0);        // Amplitude
-    fitFunc->SetParameter(4, 5.0);        // Mean
+    fitFunc->SetParameter(4, 5.5);        // Mean
     fitFunc->SetParameter(5, 0.1);        // Sigma
-    fitFunc->SetParLimits(3, 2, 8);       // Amplitude Range
-    fitFunc->SetParLimits(4, 4.5, 6);     // Mean Range
-    fitFunc->SetParLimits(5, 0.1, 0.4);   // Sigma Range
+    fitFunc->SetParLimits(3, 3.0, 8);       // Amplitude Range
+    fitFunc->SetParLimits(4, 5.0, 6.5);     // Mean Range
+    fitFunc->SetParLimits(5, 0.1, 0.3);   // Sigma Range
 
     // Set initial parameters for the third Gaussian
     fitFunc->SetParameter(6, 3.0);        // Amplitude
-    fitFunc->SetParameter(7, 3.5);        // Mean
+    fitFunc->SetParameter(7, 4.5);        // Mean
     fitFunc->SetParameter(8, 0.2);        // Sigma
-    fitFunc->SetParLimits(6, 1.5, 8);     // Amplitude Range
-    fitFunc->SetParLimits(7, 2.5, 4);     // Mean Range
-    fitFunc->SetParLimits(8, 0.1, 0.5);   // Sigma Range
+    fitFunc->SetParLimits(6, 2.0, 8);     // Amplitude Range
+    fitFunc->SetParLimits(7, 3.0, 5.0);     // Mean Range
+    fitFunc->SetParLimits(8, 0.1, 0.3);   // Sigma Range
 
     // Set initial parameters for the constant background
     fitFunc->SetParameter(9, 0.1);        // Constant Initial Value
@@ -231,6 +231,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
        gainDAC = TransitionEdge2pe3pe - TransitionEdge1pe2pe;
        double magicFactor = 0.2;   // An emprical factor to incorporate the fact that the pulse height per p.e. seems to increase as pe increase. 
        double magicFactor_threshold05 = 0.8;
+       TransitionEdge3pe4pe = TransitionEdge2pe3pe + 1.5*(1.0+magicFactor)*gainDAC;
        Threshold05pe = TransitionEdge1pe2pe - 0.5*magicFactor_threshold05*gainDAC;
        
        
