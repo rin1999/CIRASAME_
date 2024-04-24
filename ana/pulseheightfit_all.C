@@ -76,7 +76,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     fitFunc->SetParameter(2, 0.1);        // Sigma Initial Value
     fitFunc->SetParLimits(0, 2, 8);       // Amplitude Range
     fitFunc->SetParLimits(1, 5.0, 8);     // Mean Range
-    fitFunc->SetParLimits(2, 0.03, 0.2);  // Sigma Range
+    fitFunc->SetParLimits(2, 0.05, 0.2);  // Sigma Range
 
     // Set initial parameters for the second Gaussian
     fitFunc->SetParameter(3, 10.0);        // Amplitude
@@ -84,15 +84,15 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     fitFunc->SetParameter(5, 0.1);        // Sigma
     fitFunc->SetParLimits(3, 3.0, 30.0);       // Amplitude Range
     fitFunc->SetParLimits(4, 5.0, 6.5);     // Mean Range
-    fitFunc->SetParLimits(5, 0.1, 0.3);   // Sigma Range
+    fitFunc->SetParLimits(5, 0.1, 0.2);   // Sigma Range
 
     // Set initial parameters for the third Gaussian
     fitFunc->SetParameter(6, 10.0);        // Amplitude
-    fitFunc->SetParameter(7, 4.5);        // Mean
+    fitFunc->SetParameter(7, 4.7);        // Mean
     fitFunc->SetParameter(8, 0.1);        // Sigma
     fitFunc->SetParLimits(6, 2.0, 20.0);     // Amplitude Range
-    fitFunc->SetParLimits(7, 4.0, 5.0);     // Mean Range
-    fitFunc->SetParLimits(8, 0.1, 0.2);   // Sigma Range
+    fitFunc->SetParLimits(7, 4.3, 5.5);     // Mean Range
+    fitFunc->SetParLimits(8, 0.1, 0.15);   // Sigma Range
 
     // Set initial parameters for the constant background
     fitFunc->SetParameter(9, 0.1);        // Constant Initial Value
