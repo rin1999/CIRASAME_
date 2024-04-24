@@ -79,20 +79,20 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     fitFunc->SetParLimits(2, 0.03, 0.2);  // Sigma Range
 
     // Set initial parameters for the second Gaussian
-    fitFunc->SetParameter(3, 4.0);        // Amplitude
+    fitFunc->SetParameter(3, 10.0);        // Amplitude
     fitFunc->SetParameter(4, 5.5);        // Mean
     fitFunc->SetParameter(5, 0.1);        // Sigma
-    fitFunc->SetParLimits(3, 3.0, 8);       // Amplitude Range
+    fitFunc->SetParLimits(3, 3.0, 30.0);       // Amplitude Range
     fitFunc->SetParLimits(4, 5.0, 6.5);     // Mean Range
     fitFunc->SetParLimits(5, 0.1, 0.3);   // Sigma Range
 
     // Set initial parameters for the third Gaussian
-    fitFunc->SetParameter(6, 3.0);        // Amplitude
+    fitFunc->SetParameter(6, 10.0);        // Amplitude
     fitFunc->SetParameter(7, 4.5);        // Mean
-    fitFunc->SetParameter(8, 0.2);        // Sigma
-    fitFunc->SetParLimits(6, 2.0, 8);     // Amplitude Range
-    fitFunc->SetParLimits(7, 3.0, 5.0);     // Mean Range
-    fitFunc->SetParLimits(8, 0.1, 0.3);   // Sigma Range
+    fitFunc->SetParameter(8, 0.1);        // Sigma
+    fitFunc->SetParLimits(6, 2.0, 20.0);     // Amplitude Range
+    fitFunc->SetParLimits(7, 4.0, 5.0);     // Mean Range
+    fitFunc->SetParLimits(8, 0.1, 0.2);   // Sigma Range
 
     // Set initial parameters for the constant background
     fitFunc->SetParameter(9, 0.1);        // Constant Initial Value
@@ -229,7 +229,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
        TransitionEdge1pe2pe/=Ninterval12;
        TransitionEdge2pe3pe/=Ninterval23;
        gainDAC = TransitionEdge2pe3pe - TransitionEdge1pe2pe;
-       double magicFactor = 0.2;   // An emprical factor to incorporate the fact that the pulse height per p.e. seems to increase as pe increase. 
+       double magicFactor = 0.0;   // An emprical factor to incorporate the fact that the pulse height per p.e. seems to increase as pe increase. 
        double magicFactor_threshold05 = 0.8;
        TransitionEdge3pe4pe = TransitionEdge2pe3pe + 1.5*(1.0+magicFactor)*gainDAC;
        Threshold05pe = TransitionEdge1pe2pe - 0.5*magicFactor_threshold05*gainDAC;
