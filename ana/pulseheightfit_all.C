@@ -91,7 +91,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     fitFunc->SetParameter(7, 4.7);        // Mean
     fitFunc->SetParameter(8, 0.1);        // Sigma
     fitFunc->SetParLimits(6, 2.0, 20.0);     // Amplitude Range
-    fitFunc->SetParLimits(7, 4.3, 5.5);     // Mean Range
+    fitFunc->SetParLimits(7, 3.8, 4.5);     // Mean Range
     fitFunc->SetParLimits(8, 0.1, 0.15);   // Sigma Range
 
     // Set initial parameters for the constant background
