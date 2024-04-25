@@ -1,9 +1,0 @@
-CITIROC_path : ../CitirocControlSoft/bin
-HUL_path     : ../hul-common-lib/install/bin
-YAML_path    : ../CIRASAME_calib/yaml_files/cirasame010
-CIRASAME_ip  : 192.168.2.110
-DAC_scan:
-  start : 150
-  gap   : 3
-  steps : 70
-FILE_name    : aaa
