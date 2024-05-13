@@ -1,4 +1,10 @@
-data
+calib/data/
+calib/data_formated/
+calib/ana/out/
+calib/ana/root/
+calib/ana/log/
+calib/ana/pic/
+calib/pic/
 venv
 *.so
 *.d
@@ -6,4 +12,3 @@ venv
 ana/.root_hist
 yaml_files.bk/
 ana/*ACLiC*
-
