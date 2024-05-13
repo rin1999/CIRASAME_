@@ -1,0 +1,371 @@
+.x dat2root.C("testdata.dat")
+.ls
+.q
+TFile *_file0 = TFile::Open("output.root")
+.ls
+CR1->Draw()
+c1->SetLogy
+c1->SetLogy()
+.x pulseheightfit.C()
+.q
+.x pulseheightfit.C()
+.ls
+.q
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+hist->Draw()
+.ls
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.q
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.x pulseheightfit.C ()
+.x pulseheightfit.C()
+.x pulseheightfit.C()
+.q
+.q
+.x fdat2root.C(, , )
+.x fdat2root.C(, , )
+.x fdat2root.C(, , )
+.x fdat2root.C(, , )
+.x fdat2root.C(, , )
+.x fdat2root.C(, , )
+.x fdat2root.C(, , )
+.x fdat2root.C(, , )
+.x fdat2root.C()
+.x fdat2root.C()
+.x fdat2root.C()
+.x fdat2root.C()
+.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test\_1 false)
+.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test\_2 false)
+.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test\_3 false)
+.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test\_4 false)
+.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test_1 false)
+.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test_2 false)
+.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test_3 false)
+.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test_4 false)
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240419_1010.root")
+.x pulseheightfit_all.C+("root/thresholdscan_20240419_1010.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
+fg
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
+.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240421_0212")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240421_0212.root")
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240421_0614")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root")
+.q
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root"
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root"
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root"
+.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root")
+.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240421_0908")
+.x pulseheightfit_all.C("root/thresholdscan_20240421_0908.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240421_0908")
+.x pulseheightfit_all.C("root/thresholdscan_20240421_0908.root")
+.q
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240421_2200")
+.x pulseheightfit_all.C("root/thresholdscan_20240421_2200.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240422_0230")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240422_0230.root");
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240422_0230.root");
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240422_0230.root");
+.q
+.q
+.x fdat2root.C++("../data_formated/thresholdscan_20240423_1400")
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1400.root")
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240423_1440")
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1440.root")
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240423_1440")
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1440.root")
+ls
+.q
+.x fdat2root.C++("../data_formated/thresholdscan_20240423_1620")
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1440.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1440.root")
+.q
+.x fdat2root.C++("../data_formated/thresholdscan_20240423_1800")
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_1800.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.q
+.q
+.x fdat2root.C++("../data_formated/thresholdscan_20240424_2100")
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.q
+.q
+TFile *_file0 = TFile::Open("root/thresholdscan_20240424_2100.root")
+.ls
+.q
+.x fdat2root.C++("../data_formated/thresholdscan_20240424_2100")
+.q
+.x fdat2root.C++("../data_formated/thresholdscan_20240424_2100")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240424_2215")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
+cd bin
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240424_2300")
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C++("root/thresholdscan_20240424_2300.root")
+.q
+.x fdat2root.C("../data_formated/biasscan/biasscan_20240425_1635")
+.q
+TFile *_file0 = TFile::Open("root/biasscan_20240425_1635.root")
+.ls
+tbrowser b1
+Tbrowser b1
+Tbrowser b1
+.q
+TFile *_file0 = TFile::Open("root/biasscan_20240425_1635.root")
+Tbrowser b1
+TBrowser b1
+.q
+TFile *_file0 = TFile::Open("root/biasscan_20240425_1635.root")
+TBrowser b1
+.q
+TFile *_file0 = TFile::Open("root/biasscan_20240425_1635.root")
+.ls
+tree->Draw("g001_01_01")
+g001_01_01->Draw()
+.q
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
+.q
+.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
+.q

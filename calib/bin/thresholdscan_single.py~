@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+#
+#
+#
+#
+import os
+import argparse
+import yaml
+
+# Define the default path for the directory
+DEFAULT_PATH = "~/cirasame/calib/data"
+
+# Define the default YAML file location
+YAML_FILE = "~/cirasame/calib/config/thresholdscan_range.yaml"
+
+def create_directory(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+def check_directory_exists(run_name, number):
+    run_directory = os.path.join(DEFAULT_PATH, run_name)
+    if not os.path.exists(run_directory):
+        os.makedirs(run_directory)
+    cirasame_directory = os.path.join(run_directory, f"cirasame{number:03d}")
+    if os.path.exists(cirasame_directory):
+        overwrite = input("Warning: Directory already exists. Do you want to overwrite? (y/n): ")
+        if overwrite.lower() != 'y':
+            print("Process paused. Exiting.")
+            return False
+    else:
+        os.makedirs(cirasame_directory)
+        create_directory(os.path.join(cirasame_directory, "binary"))
+        create_directory(os.path.join(cirasame_directory, "decimal"))
+    return True
+
+def read_yaml():
+    with open(YAML_FILE, 'r') as file:
+        data = yaml.safe_load(file)
+    return data
+
+def get_ip_address(number):
+    # Logic to get IP address based on CIRASAME number
+    return f"192.168.1.{number}"
+
+def setup_loop_parameters(start, stop, step):
+    if start is None or stop is None or step is None:
+        print("Error: If any of start, stop, or step is specified, all three parameters must be given.")
+        exit(1)
+    # Convert start, stop, and step to integers
+    start = int(start)
+    stop = int(stop)
+    step = int(step)
+    return start, stop, step
+
+def main(run_name, number, start=None, stop=None, step=None):
+    if not check_directory_exists(run_name, number):
+        return
+    
+    start, stop, step = setup_loop_parameters(start, stop, step)
+    ip_address = get_ip_address(number)
+    
+    for threshold_value in range(start, stop + 1, step):
+        # Call your main subroutine with threshold_value and ip_address
+        main_subroutine(threshold_value, ip_address)
+
+def main_subroutine(threshold_value, ip_address):
+    # Your main subroutine goes here
+    print(f"Threshold value: {threshold_value}, IP address: {ip_address}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Threshold Scan Script")
+    parser.add_argument("-r", "--run", required=True, help="Run name")
+    parser.add_argument("-n", "--number", type=int, required=True, help="CIRASAME number")
+    parser.add_argument("-b", "--begin", type=int, help="Start value")
+    parser.add_argument("-e", "--end", type=int, help="Stop value")
+    parser.add_argument("-s", "--step", type=int, help="Step value")
+    args = parser.parse_args()
+
+    main(args.run, args.number, args.begin, args.end, args.step)

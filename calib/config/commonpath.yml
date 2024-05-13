@@ -1,0 +1,4 @@
+# PATH used for all CIRASAME
+hulcommonlib  : ~/cirasame/hul-common-lib/install/bin
+citiroccontrolsoft  : ~/cirasame/CitirocControlSoft/bin
+config  : ~/cirasame/CIRASAME_calib/config

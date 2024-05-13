@@ -1,0 +1,10 @@
+Iteration: 0
+Fit Parameters: Slope = 2.93939, Intercept = -3.26667
+Iteration: 1
+Fit Parameters: Slope = 2.93939, Intercept = -3.26667
+Iteration: 2
+Fit Parameters: Slope = 2.93939, Intercept = -3.26667
+Iteration: 3
+Fit Parameters: Slope = 2.93939, Intercept = -3.26667
+Iteration: 4
+Fit Parameters: Slope = 2.93939, Intercept = -3.26667
