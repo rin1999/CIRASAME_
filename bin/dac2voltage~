@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+#
+# converts DAC value of CIRASAME common bias to the actual voltage
+# or to do a reverse conversion. 
+#
+# created on 25.4.2024
+#
+import argparse
+
+# Define global variables for slope and offset
+slope = -0.114
+offset = 70.567
+
+def dac_to_voltage(dac_value):
+    # Access global variables slope and offset
+    global slope, offset
+    return dac_value * slope + offset
+
+def voltage_to_dac(voltage_value):
+    # Access global variables slope and offset
+    global slope, offset
+    return int((voltage_value - offset) / slope)
+
+def convert_value(value, reverse=False, bias=True):
+    if reverse:
+        if bias:
+            return voltage_to_dac(value)
+        else:
+            return value
+    else:
+        if bias:
+            return dac_to_voltage(value)
+        else:
+            return value
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Convert bias to voltage and vice versa.")
+    parser.add_argument("value", type=float, help="Value to convert")
+    parser.add_argument("-r", "--reverse", action="store_true", help="Reverse conversion")
+    parser.add_argument("-b", "--bias", action="store_true", help="Convert from bias to voltage (default)")
+    parser.add_argument("-v", "--voltage", action="store_true", help="Convert from voltage to bias")
+    args = parser.parse_args()
+
+    if args.bias and args.voltage:
+        parser.error("Cannot specify both --bias and --voltage")
+
+    if not args.bias and not args.voltage:
+        args.bias = True
+
+    result = convert_value(args.value, args.reverse, args.bias)
+    if args.bias:
+        print(f"DAC value {args.value} corresponds to {result:3f} V")
+    if args.voltage:
+        print(f"Voltage {args.value} corresponds to DAC value {result:03d}")
+        

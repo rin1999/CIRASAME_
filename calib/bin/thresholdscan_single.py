@@ -7,11 +7,18 @@ import os
 import argparse
 import yaml
 import sys
+import time
+import subprocess
+import commonConfigReader
 
-DEFAULT_PATH = "~/cirasame/calib/data" # Define the default path for the threshold scan data directory
-YAML_FILE = "~/cirasame/calib/config/thresholdscan_range.yml" # Define the default threshold scan range YAML file location
-#YAML_FILE = "/home/nestdaq/cirasame/calib/config/thresholdscan_range.yml" # Define the default threshold scan range YAML file location
 
+DATA_BASEDIR = "~/cirasame/calib/data" # the threshold scan data base directory
+CONFIG_BASEDIR = "~/cirasame/calib/config" # the config yaml file base directory
+CITIROC_PATH = "~/cirasame/CitirocControlSoft/bin" # the CITIROC control software binary directory
+HUL_PATH = "~/cirasame/hul-common-lib/install/bin" # the HUL software binary directory
+YAML_FILE = "~/cirasame/calib/config/thresholdscan_range.yml" # the threshold scan range YAML file location
+
+config_reader = commonConfigReader.CommonConfigReader()
 
 def create_directory(directory):
     if not os.path.exists(directory):
@@ -23,7 +30,9 @@ def open_thresholdscan_range_config_file():
     return data
 
 def get_cirasame_ip_address(number):
-    return f"192.168.1.{number}"
+    ip_address = config_reader.readCirasameIP(number)
+#    return f"192.168.1.{number}"
+    return ip_address
 
 def get_loop_parameters(start, end, step):
     if (start is None) != (end is None) or (start is None) != (step is None):
@@ -45,13 +54,101 @@ def get_loop_parameters(start, end, step):
         
         return int(start), int(end), int(step)
 
-def scaler_measurement(threshold_value, ip_address):
-    print(f"Threshold value: {threshold_value}, IP address: {ip_address}")
+def get_config_path(cirasame_number):
+    return f"{os.path.expanduser(CONFIG_BASEDIR)}/cirasame{cirasame_number:03d}"
 
+def get_register_file_path(cirasame_number):
+    config_path = get_config_path(cirasame_number)
+    register_file_path = f"{config_path}/RegisterValue.yml"
+    return register_file_path
+
+def save_original_register_config(cirasame_number):
+    register_file_path = get_register_file_path(cirasame_number)
+    with open(register_file_path, 'r') as f:
+        return yaml.safe_load(f)
+
+def restore_original_register_config(cirasame_number, original_register_config_file):
+    register_file_path = get_register_file_path(cirasame_number)
+    with open(register_file_path, 'w') as f:
+        yaml.dump(original_register_config_file, f)
+
+def set_register(cirasame_number, dac_threshold):
+    register_path = get_register_file_path(cirasame_number)
+    with open(register_path, 'r') as f:
+        yml_RegVal = yaml.safe_load(f)
+#        print(f"start : DAC2 = {dac_threshold}")
+        yml_RegVal['CITIROC1']['DAC2 code'] = dac_threshold
+        yml_RegVal['CITIROC2']['DAC2 code'] = dac_threshold
+        yml_RegVal['CITIROC3']['DAC2 code'] = dac_threshold
+        yml_RegVal['CITIROC4']['DAC2 code'] = dac_threshold
+#        print(yml_RegVal['CITIROC1']['DAC2 code'])
+
+    with open(register_path, 'w') as f:
+        yaml.dump(yml_RegVal, f)
+        
+        """
+        event, values = window.read(timeout=10)
+        if event == 'Cancel' or event == sg.WIN_CLOSED:
+        break
+        window['-PROG-'].update(current_progress)
+        current_progress = current_progress+1
+        """
+        
+def measure(run_name, cirasame_number, threshold):
+    #main part of reading scaler
+    measurement_time = 1.0 # second
+    register_path = get_register_file_path(cirasame_number)
+    config_path = get_config_path(cirasame_number)
+    citiroc_control_bin = f"{os.path.expanduser(CITIROC_PATH)}/femcitiroc_control"
+    ip_address = get_cirasame_ip_address(cirasame_number)
+    arg1 = f"-ip={ip_address}"
+    arg2 = f"-yaml={config_path}/RegisterValue.yml"
+    arg3 = f"-yaml={config_path}/InputDAC.yml"
+    arg4 = f"-yaml={config_path}/DiscriMask.yml"
+    hul_command_write = f"{os.path.expanduser(HUL_PATH)}/write_register"
+    hul_command_read = f"{os.path.expanduser(HUL_PATH)}/read_scr"
+    run_output_directory = get_run_output_directory(run_name)
+    cirasame_output_directory = get_cirasame_output_directory(run_output_directory, cirasame_number)
+    arg01 = f"{cirasame_output_directory}/binary/dataBin{threshold:03d}.dat"
+
+    print(f"{citiroc_control_bin} {arg1} {arg2} {arg3} {arg4} -sc -read -q")
+    subprocess.run([citiroc_control_bin, arg1, arg2, arg3, arg4, '-sc', '-read', '-q'])
+    print(f"{hul_command_write} {ip_address} 0x80000000 0x1 1")
+    subprocess.run([hul_command_write, ip_address, '0x80000000', '0x1', '1'])  # set the scaler value to zero
+    time.sleep(measurement_time) 
+    print(f"{hul_command_read} {ip_address} {arg01}")
+    subprocess.run([hul_command_read, ip_address, arg01])
+
+def format_data(run_name, cirasame_number, start, end, step):
+
+    run_directory = get_run_output_directory(run_name)  # e.g. ~/cirasame/calib/data/20240513_1200
+    for threshold in range(start, end + 1, step):
+        # Run the command and capture stdout as bytes
+        cirasame_output_directory = get_cirasame_output_directory(run_directory, cirasame_number)
+        argX = f"{cirasame_output_directory}/binary/dataBin{threshold:03d}.dat"
+        output_file = f"{cirasame_output_directory}/decimal/dataDec{threshold:03d}.txt"
+        output_bytes = subprocess.run(['od', '-Ad', '-td', '-v', argX], stdout=subprocess.PIPE).stdout
+
+        # Decode stdout to a string
+        output_str = output_bytes.decode('utf-8')  # Assuming UTF-8 encoding, adjust as needed
+        #print(output_str)
+        with open(output_file, 'w') as f:
+            f.write(output_str)
+    
+def scaler_measurement(run_name, cirasame_number, start, end, step):
+    for threshold in range(start, end + 1, step):
+        print(f"CIRASAME{cirasame_number} Threshold value: {threshold}")
+        set_register(cirasame_number, threshold)
+        measure(run_name, cirasame_number, threshold)
+        #    print(scan_dac_value)
 
 def get_run_output_directory(run_name):
-    run_directory = os.path.join(DEFAULT_PATH, run_name)
-    return run_directory
+    # e.g. ~/cirasame/calib/data/20240513_1200
+    return os.path.join(os.path.expanduser(DATA_BASEDIR), run_name)
+
+def get_cirasame_output_directory(run_directory, cirasame_number):
+    # e.g. ~/cirasame/calib/data/20240513_1200/cirasame001
+    return os.path.join(run_directory, f"cirasame{cirasame_number:03d}")
 
 def prepare_run_output_directory(run_name):
     run_directory = get_run_output_directory(run_name)
@@ -61,9 +158,9 @@ def prepare_run_output_directory(run_name):
 
 def prepare_output_directory(run_name, cirasame_number):
     run_directory = get_run_output_directory(run_name)
-    cirasame_directory = os.path.join(run_directory, f"cirasame{cirasame_number:03d}")
+    cirasame_directory = get_cirasame_output_directory(run_directory, cirasame_number)
     if os.path.exists(cirasame_directory):
-        overwrite = input("Warning: Run directory already exists. Do you want to overwrite? (y/n): ")
+        overwrite = input(f"Warning: directory {cirasame_directory} already exists. Do you want to overwrite? (y/n): ")
         if overwrite.lower() != 'y':
             print("Exitting.")
             sys.exit(0)
@@ -73,14 +170,17 @@ def prepare_output_directory(run_name, cirasame_number):
         create_directory(os.path.join(cirasame_directory, "decimal"))
     return
 
-def main(run_name, number, start=None, end=None, step=None):
+
+def main(run_name, cirasame_number, start=None, end=None, step=None):
     start, end, step = get_loop_parameters(start, end, step)
     prepare_run_output_directory(run_name)
-    prepare_output_directory(run_name, number)
-    ip_address = get_cirasame_ip_address(number)
+    prepare_output_directory(run_name, cirasame_number)
+
+    original_register_config_file = save_original_register_config(cirasame_number)
+    scaler_measurement(run_name, cirasame_number, start, end, step) # loop
+    restore_original_register_config(cirasame_number, original_register_config_file)
+    format_data(run_name, cirasame_number, start, end, step) # loop
     
-    for threshold_value in range(start, end + 1, step):
-        scaler_measurement(threshold_value, ip_address)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Threshold Scan Script")
