@@ -17,16 +17,13 @@ begin=$2
 end=$3
 runname=$4
 
-command="python3 scaler_reader.py"
+command="./thresholdscan_single.py"
 
-cd ~/cirasame/calib
+cd ~/cirasame/calib/bin
 for ((i = begin; i <= end; i++)); do
-    arg="-n cirasame$(printf "%03d" $i)_$runname -s yml/cirasame$(printf "%03d" $i)/settings.yml"
+#    arg="-n cirasame$(printf "%03d" $i)_$runname -s yml/cirasame$(printf "%03d" $i)/settings.yml"
+    arg="-r $runname -n $i"
     printf "%s\n" "$arg"
 done | xargs -n 1 -P $nparallel -I {} sh -c "$command {}"
 
 echo "All commands have completed."
-
-#python3 scaler_reader.py -n cirasame001_$date -s yml/cirasame001/settings.yml &
-#python3 scaler_reader.py -n cirasame002_$date -s yml/cirasame002/settings.yml &
-#python3 scaler_reader.py -n cirasame003_$date -s yml/cirasame003/settings.yml & 

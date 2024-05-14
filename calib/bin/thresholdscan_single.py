@@ -43,10 +43,14 @@ def get_loop_parameters(start, end, step):
         return int(start), int(end), int(step)
     else:
         # Read from YAML file
-        config_yml = open_thresholdscan_range_config_file()
-        start = config_yml.get('start')
-        end = config_yml.get('end')
-        step = config_yml.get('step')
+        configThresholdScanRange = config_reader.readThresholdScanRange()
+#        config_yml = open_thresholdscan_range_config_file()
+#        start = config_yml.get('start')
+#        end = config_yml.get('end')
+#        step = config_yml.get('step')
+        start = configThresholdScanRange['start']
+        end = configThresholdScanRange['end']
+        step = configThresholdScanRange['step']
         
         if start is None or end is None or step is None:
             print("Error: Missing loop parameters in YAML file.")
