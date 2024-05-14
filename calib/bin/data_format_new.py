@@ -47,7 +47,7 @@ def process_data(run_name, iCIRASAME, iASIC):
         out_df = pd.DataFrame(columns=col_name)
         
     for f in dat_files:
-        print(f)
+#        print(f)
         df = pd.read_csv(f"{dir_name}/{f}", sep='\s+', header=None)
         df.columns = ['address', 'row0', 'row1', 'row2', 'row3']
         df = df.drop('address', axis=1)
@@ -71,23 +71,19 @@ def process_data(run_name, iCIRASAME, iASIC):
     output_filename = f"{output_rundir}/cirasame{iCIRASAME:03}_{iASIC:0>2}.dat"
         
     if not os.path.exists(output_rundir):
-        print(f"{output_rundir} not found")
-        os.makedirs(f"{output_rundir}"
-        
-    if args.asic == 0:
-#        out_df.to_csv("{args.inputfile}.dat", sep=' ', header=None, index=None)
-        print(f"cirasame_{run_name}.dat")
-    else:
-#        out_df.to_csv(output_path, sep=' ', header=None, index=None)
-        print(f"{output_filename}")
+        os.makedirs(f"{output_rundir}")
+        print(f"Output directory {output_rundir} created.")
+
+    out_df.to_csv(output_filename, sep=' ', header=None, index=None)
+
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", "--run_name", required=True, type=str, help='scan run name e.g. 20240422_2200')
     args = parser.parse_args()
     
-    for iCIRASAME in range(1, 2):
-        for iASIC in range(1, 2):
+    for iCIRASAME in range(1, 19):
+        for iASIC in range(1, 5):
             process_data(args.run_name, iCIRASAME, iASIC)
 
 if __name__ == "__main__":
