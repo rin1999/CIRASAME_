@@ -470,7 +470,7 @@ void threscan_ana(TString fileName) {
    g_idbaseline_even->SetMarkerStyle(20); // Set marker style to a filled circle
    g_idbaseline_odd->SetMarkerSize(2);
    g_idbaseline_odd->SetMarkerStyle(24);  // Set marker style to a open circle
-   g_idbaseline_odd->Draw("AP AXIS");          // Axis Point
+   g_idbaseline_odd->Draw("AP");          // Axis Point
 //   g_idbaseline_odd->GetYaxis()->SetRange(160., 200.);
    g_idbaseline_even->Draw("P same");     // Point Same
    canvas2->Print(outputPDFFileName);
