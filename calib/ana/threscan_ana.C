@@ -155,12 +155,12 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     int Ninterval01 = 0;
     int Ninterval12 = 0;
     double DACMin = 0;
-    double DACMax = 600;
+    double DACMax = 1100;
     double reception_factor = 2.0;  // expanding the blue regions in the graph, which prevents from excluding large(small)-counted points in the flat area.
 
     std::ofstream logFile;
     if (DEBUG==2) {
-       TString logFileName = Form("pulseheightfit_all-%03i-%02i-%03i.log", iCIRASAME, iASIC, iChannel);
+       TString logFileName = Form("threscan_ana-%03i-%02i-%03i.log", iCIRASAME, iASIC, iChannel);
        logFile.open(logFileName);
        if (!logFile.is_open()) {
           std::cout << "Error: Unable to open file " << logFileName << std::endl;
@@ -337,10 +337,10 @@ void threscan_ana(TString fileName) {
    TRegexp re("[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9]");
    Ssiz_t pos = fileName.Index(re);
    TString matchedPart, outputOutFileName, outputPDFFileName, outputPDFDir, outputOutDir;
-   TString outputOutFileName2;
+   TString outputOutFileName2, outputOutFileName3;
    Double_t gainDAC = 0.0;
    Double_t TransitionEdge2pe3pe = 0.0;
-   std::ofstream outputFile, outputFile2;
+   std::ofstream outputFile, outputFile2, outputFile3;
    Int_t canvasDimensionX = 1000;
    Int_t canvasDimensionY = 1000;
    TString messagestring;
@@ -354,8 +354,9 @@ void threscan_ana(TString fileName) {
    } else {
       std::cout << "Pattern not found in the input string." << std::endl;
    }
-   outputOutFileName = "threscan_ana_chan_" + matchedPart + ".out";  // channelwise output
-   outputOutFileName2 = "threscan_ana_asic_" + matchedPart + ".out"; // asicwise output
+   outputOutFileName = "threscan_ana_chan_" + matchedPart + ".out";  // channel-wise output
+   outputOutFileName2 = "threscan_ana_asic_" + matchedPart + ".out"; // asic-wise output
+   outputOutFileName3 = "threscan_ana_crsm_" + matchedPart + ".out"; // cirasame-wise output
    outputPDFFileName = outputPDFDir + "/threscan_ana_" + matchedPart + ".pdf";
    
    Int_t nCIRASAME = 18;
@@ -373,6 +374,10 @@ void threscan_ana(TString fileName) {
    if (!outputFile2.is_open()) {
       std::cout << "Error: Unable to open file " << outputOutFileName2 << std::endl;
    }
+   outputFile3.open(outputOutFileName3);
+   if (!outputFile3.is_open()) {
+      std::cout << "Error: Unable to open file " << outputOutFileName3 << std::endl;
+   }
    
    TCanvas* canvas2 = new TCanvas("canvas2", "Summary", canvasDimensionX, canvasDimensionY);
    TCanvas *dummyCanvas = new TCanvas("dummyCanvas", "Dummy Canvas", canvasDimensionX, canvasDimensionY);
@@ -385,6 +390,7 @@ void threscan_ana(TString fileName) {
    TGraph* g_idgain = new TGraph(); // 0, 2304, 0, 70;
    TGraphErrors* g_idbaseline_odd = new TGraphErrors(); // 0, 2304, 0, 70;
    TGraphErrors* g_idbaseline_even = new TGraphErrors(); // 0, 2304, 0, 70;
+   TGraphErrors* g_cirasamegain = new TGraphErrors();
    h_gain->GetXaxis()->SetTitle("Gain in DAC value");
    h_gain->GetYaxis()->SetTitle("Count");
    g_idgain->GetXaxis()->SetTitle("Global Channel");
@@ -393,12 +399,15 @@ void threscan_ana(TString fileName) {
    g_idbaseline_odd->GetYaxis()->SetTitle("Baseline+offset (DAC)");
    g_idbaseline_even->GetXaxis()->SetTitle("Global CITIROC Channel");
    g_idbaseline_even->GetYaxis()->SetTitle("Baseline+offset (DAC)");
+   g_cirasamegain->GetXaxis()->SetTitle("CIRASAME Number");
+   g_cirasamegain->GetYaxis()->SetTitle("Averaged Gain (DAC)");
    int nIdBaselineEven = 0;
    int nIdBaselineOdd = 0;
+   double cirasame_gain[nCIRASAME];
    for(int iCIRASAME=1; iCIRASAME<=nCIRASAME; iCIRASAME++){
-   //for(int iCIRASAME=12; iCIRASAME<=12; iCIRASAME++){
+     double this_cirasame_gain = 0;
+     int ch_count_cirasame_gain = 0;
       for(int iASIC=1; iASIC<=nASIC; iASIC++){
-      //for(int iASIC=3; iASIC<=3; iASIC++){
          
          Int_t gCITIROCChannel = 4*(iCIRASAME-1) + iASIC-1;
          TString baseline_citiroc_string = Form("Baseline+C distribution CIRASAME%2i CITIROC%1i", iCIRASAME, iASIC);
@@ -428,6 +437,12 @@ void threscan_ana(TString fileName) {
             TransitionEdge2pe3peASIC+=TransitionEdge2pe3pe;
             Threshold05peASIC+=Threshold05pe;
 
+            if ((!std::isinf(gainDAC)) && (!std::isnan(gainDAC)) && (gainDAC>0.0)){
+               this_cirasame_gain += gainDAC;
+               ch_count_cirasame_gain++;
+            }
+            //this_cirasame_gain += gainDAC;
+
             channelCount++;
 
          }
@@ -449,13 +464,34 @@ void threscan_ana(TString fileName) {
             g_idbaseline_odd->SetPointError(nIdBaselineOdd, 0, baseline_citiroc_rms);
             nIdBaselineOdd++;
          }
-
+ 
       }
+      //this_cirasame_gain/=(nChannel*nASIC);
+      this_cirasame_gain/=ch_count_cirasame_gain;
+      cirasame_gain[iCIRASAME] = this_cirasame_gain;
+      g_cirasamegain->SetPoint(iCIRASAME, iCIRASAME, this_cirasame_gain);
+      g_cirasamegain->SetPointError(iCIRASAME, 0, 0);
+      messagestring.Form("%i %f", iCIRASAME, this_cirasame_gain);
+      outputFile3 << messagestring << std::endl;
+
    }
    h_gain->Draw("");  // Gain Histogram
    canvas2->Print(outputPDFFileName);
    canvas2->Clear();
-   g_idgain->Draw(""); // Gain vs ID
+   double range_g_id_gain = 100.0;
+   double yMax_g_id_gain = h_gain->GetMean() + 0.5*range_g_id_gain;
+   double yMin_g_id_gain = h_gain->GetMean() - 0.5*range_g_id_gain;
+   if (yMin_g_id_gain < 0){
+     yMax_g_id_gain = range_g_id_gain;
+     yMin_g_id_gain = 0.0;
+   }
+   g_idgain->GetYaxis()->SetRangeUser(yMin_g_id_gain, yMax_g_id_gain);
+   g_idgain->Draw("AP"); // Gain vs ID
+   canvas2->Print(outputPDFFileName);
+   canvas2->Clear();
+   g_cirasamegain->SetMarkerSize(2);
+   g_cirasamegain->SetMarkerStyle(20); // Set marker style to a filled circle
+   g_cirasamegain->Draw("AP");
    canvas2->Print(outputPDFFileName);
    
    h_baseline_total->Draw(""); // Baseline Total
@@ -484,5 +520,6 @@ void threscan_ana(TString fileName) {
    inputFile->Close();
    outputFile.close();
    outputFile2.close();
+   outputFile3.close();
    
 }
