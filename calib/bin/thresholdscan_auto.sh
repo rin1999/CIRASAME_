@@ -27,3 +27,4 @@ for ((i = begin; i <= end; i++)); do
 done | xargs -n 1 -P $nparallel -I {} sh -c "$command {}"
 
 echo "All commands have completed."
+./attentionplease.sh
