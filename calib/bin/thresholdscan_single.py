@@ -11,6 +11,7 @@ import time
 import subprocess
 import commonConfigReader
 import logging
+import datetime
 
 
 DATA_BASEDIR = "~/cirasame/calib/data" # the threshold scan data base directory
@@ -18,6 +19,7 @@ CONFIG_BASEDIR = "~/cirasame/calib/config" # the config yaml file base directory
 CITIROC_PATH = "~/cirasame/CitirocControlSoft/bin" # the CITIROC control software binary directory
 HUL_PATH = "~/cirasame/hul-common-lib/install/bin" # the HUL software binary directory
 YAML_FILE = "~/cirasame/calib/config/thresholdscan_range.yml" # the threshold scan range YAML file location
+LOG_FILE = "~/cirasame/calib/thresholdscan_log.txt" # the threshold log file
 
 config_reader = commonConfigReader.CommonConfigReader()
 
@@ -185,13 +187,19 @@ def prepare_output_directory(run_name, cirasame_number):
         create_directory(os.path.join(cirasame_directory, "decimal"))
     return
 
+def write_meatadata_to_log(run_name, cirasame_number, start, end, step):
+    with open(os.path.expanduser(LOG_FILE), 'a') as file:
+        current_datetime = datetime.datetime.now()
+        logtext = f"{current_datetime}: {run_name} {cirasame_number} {start} {end} {step}"
+        file.write(logtext)
+    return
 
 def main(run_name, cirasame_number, start=None, end=None, step=None):
-
 
     start, end, step = get_loop_parameters(start, end, step)
     prepare_run_output_directory(run_name)
     prepare_output_directory(run_name, cirasame_number)
+    write_meatadata_to_log(run_name, cirasame_number, start, end, step)
 
     original_register_config_file = save_original_register_config(cirasame_number)
     scaler_measurement(run_name, cirasame_number, start, end, step) # loop
