@@ -191,7 +191,7 @@ def write_meatadata_to_log(run_name, cirasame_number, start, end, step):
     with open(os.path.expanduser(LOG_FILE), 'a') as file:
         current_datetime = datetime.datetime.now()
         logtext = f"{current_datetime}: {run_name} {cirasame_number} {start} {end} {step}"
-        file.write(logtext)
+        file.write(f"{logtext}\n")
     return
 
 def main(run_name, cirasame_number, start=None, end=None, step=None):
