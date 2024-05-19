@@ -10,6 +10,7 @@ import sys
 import time
 import subprocess
 import commonConfigReader
+import logging
 
 
 DATA_BASEDIR = "~/cirasame/calib/data" # the threshold scan data base directory
@@ -36,7 +37,7 @@ def get_cirasame_ip_address(number):
 
 def get_loop_parameters(start, end, step):
     if (start is None) != (end is None) or (start is None) != (step is None):
-        print("Error: If any of start, end, or step is specified, all three parameters must be given.")
+        logging.error("Error: If any of start, end, or step is specified, all three parameters must be given.")
         exit(1)
     
     if start is not None and end is not None and step is not None:
@@ -53,7 +54,7 @@ def get_loop_parameters(start, end, step):
         step = configThresholdScanRange['step']
         
         if start is None or end is None or step is None:
-            print("Error: Missing loop parameters in YAML file.")
+            logging.error("Error: Missing loop parameters in YAML file.")
             exit(1)
         
         return int(start), int(end), int(step)
@@ -80,12 +81,12 @@ def set_register(cirasame_number, dac_threshold):
     register_path = get_register_file_path(cirasame_number)
     with open(register_path, 'r') as f:
         yml_RegVal = yaml.safe_load(f)
-#        print(f"start : DAC2 = {dac_threshold}")
+#        logging.info(f"start : DAC2 = {dac_threshold}")
         yml_RegVal['CITIROC1']['DAC2 code'] = dac_threshold
         yml_RegVal['CITIROC2']['DAC2 code'] = dac_threshold
         yml_RegVal['CITIROC3']['DAC2 code'] = dac_threshold
         yml_RegVal['CITIROC4']['DAC2 code'] = dac_threshold
-#        print(yml_RegVal['CITIROC1']['DAC2 code'])
+#        logging.info(yml_RegVal['CITIROC1']['DAC2 code'])
 
     with open(register_path, 'w') as f:
         yaml.dump(yml_RegVal, f)
@@ -115,13 +116,23 @@ def measure(run_name, cirasame_number, threshold):
     cirasame_output_directory = get_cirasame_output_directory(run_output_directory, cirasame_number)
     arg01 = f"{cirasame_output_directory}/binary/dataBin{threshold:03d}.dat"
 
-    print(f"{citiroc_control_bin} {arg1} {arg2} {arg3} {arg4} -sc -read -q")
-    subprocess.run([citiroc_control_bin, arg1, arg2, arg3, arg4, '-sc', '-read', '-q'])
-    print(f"{hul_command_write} {ip_address} 0x80000000 0x1 1")
-    subprocess.run([hul_command_write, ip_address, '0x80000000', '0x1', '1'])  # set the scaler value to zero
+    logging.info(f"{citiroc_control_bin} {arg1} {arg2} {arg3} {arg4} -sc -read -q")
+    if logging.root.level <= logging.DEBUG:
+        subprocess.run([citiroc_control_bin, arg1, arg2, arg3, arg4, '-sc', '-read', '-q'])
+    else:
+        out1 = subprocess.run([citiroc_control_bin, arg1, arg2, arg3, arg4, '-sc', '-read', '-q'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout_str = out1.stdout.decode('utf-8')
+        stderr_str = out1.stderr.decode('utf-8')
+        grep_process = subprocess.Popen(["grep", "Timeout"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        timeoutmessage, _ = grep_process.communicate(out1.stdout)
+        if timeoutmessage:
+            logging.warning(f"{timeoutmessage}")
+    logging.info(f"{hul_command_write} {ip_address} 0x80000000 0x1 1")
+
+    out2 = subprocess.run([hul_command_write, ip_address, '0x80000000', '0x1', '1'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)  # set the scaler value to zero
     time.sleep(measurement_time) 
-    print(f"{hul_command_read} {ip_address} {arg01}")
-    subprocess.run([hul_command_read, ip_address, arg01])
+    logging.info(f"{hul_command_read} {ip_address} {arg01}")
+    out3 = subprocess.run([hul_command_read, ip_address, arg01], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 def format_data(run_name, cirasame_number, start, end, step):
 
@@ -135,16 +146,16 @@ def format_data(run_name, cirasame_number, start, end, step):
 
         # Decode stdout to a string
         output_str = output_bytes.decode('utf-8')  # Assuming UTF-8 encoding, adjust as needed
-        #print(output_str)
+        #logging.info(output_str)
         with open(output_file, 'w') as f:
             f.write(output_str)
     
 def scaler_measurement(run_name, cirasame_number, start, end, step):
     for threshold in range(start, end + 1, step):
-        print(f"CIRASAME{cirasame_number} Threshold value: {threshold}")
+        logging.warning(f"CIRASAME{cirasame_number} Threshold value: {threshold}")
         set_register(cirasame_number, threshold)
         measure(run_name, cirasame_number, threshold)
-        #    print(scan_dac_value)
+        #    logging.info(scan_dac_value)
 
 def get_run_output_directory(run_name):
     # e.g. ~/cirasame/calib/data/20240513_1200
@@ -166,7 +177,7 @@ def prepare_output_directory(run_name, cirasame_number):
     if os.path.exists(cirasame_directory):
         overwrite = input(f"Warning: directory {cirasame_directory} already exists. Do you want to overwrite? (y/n): ")
         if overwrite.lower() != 'y':
-            print("Exitting.")
+            logging.warning("Exitting.")
             sys.exit(0)
     else:
         os.makedirs(cirasame_directory)
@@ -176,6 +187,8 @@ def prepare_output_directory(run_name, cirasame_number):
 
 
 def main(run_name, cirasame_number, start=None, end=None, step=None):
+
+
     start, end, step = get_loop_parameters(start, end, step)
     prepare_run_output_directory(run_name)
     prepare_output_directory(run_name, cirasame_number)
@@ -193,6 +206,9 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--begin", type=int, help="Start value")
     parser.add_argument("-e", "--end", type=int, help="End value")
     parser.add_argument("-s", "--step", type=int, help="Step value")
+    parser.add_argument("-t", "--test", action='store_true', help="Enable test mode")
+    parser.add_argument("-l", "--loglevel", choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING', help="Set the logging level")
     args = parser.parse_args()
 
+    logging.basicConfig(level=logging.getLevelName(args.loglevel), format='%(message)s')
     main(args.run, args.number, args.begin, args.end, args.step)
