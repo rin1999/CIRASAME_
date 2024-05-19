@@ -12,3 +12,10 @@ venv
 ana/.root_hist
 yaml_files.bk/
 ana/*ACLiC*
+hul-common-lib/
+tmp/
+calib/config.bk/
+__pycache__
+*~
+*.bk
+

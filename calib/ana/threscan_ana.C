@@ -138,7 +138,6 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
                                           Form("2pe peak %4.3f %4.3f %4.3f", countRate2peLog10Amp, countRate2peLog10, countRate2peLog10Sigma));
     textFitResult2pe->Draw();
     
-    
     canvas->cd(2);
     canvas->Draw();
     
@@ -173,7 +172,9 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
 
 
     double carrier_last0pe = 0.0;
+    double carrier_first1pe = 0.0;
     double carrier_last1pe = 0.0;
+    double carrier_first2pe = 0.0;
     bool is_first_1pe = true;
     bool is_first_2pe = true;
 
@@ -195,7 +196,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
            messagestring.Form("   belongs to the 0 photon-equivalent");
 //           std::cout << messagestring << std::endl;
            if (DEBUG==2) logFile << messagestring;
-        } else if ((TMath::Abs(log10y-countRate0peLog10) >= reception_factor*countRate0peLog10Sigma) &&
+        } else if ((TMath::Abs(log10y-countRate0peLog10) >= 1.5*reception_factor*countRate0peLog10Sigma) &&
                    (is0pefound == true) && (TMath::Abs(log10y-countRate1peLog10) >= 0.2) &&
                    (is1pefound == false)) {
            TransitionEdge0pe1pe += x;
@@ -210,7 +211,11 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
                TransitionEdge0pe1pe += x;
                Ninterval01 = 2;
             }
-           is1pefound = true;
+            if(is1pefound==false){
+               is1pefound = true;
+               carrier_first1pe = x;
+            }
+           
            carrier_last1pe=x;
            messagestring.Form("   belongs to the 1 photon-equivalent");
 //           std::cout << messagestring << std::endl;
@@ -228,7 +233,11 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
                TransitionEdge1pe2pe += x;
                Ninterval12 = 2;
             }
-           is2pefound = true;
+            if(is2pefound==false){
+               is2pefound = true;
+               carrier_first2pe = x;
+            }
+           
            messagestring.Form("   belongs to the 2 photon-equivalent");
            if (DEBUG==2) logFile << messagestring;
 //           std::cout << messagestring << std::endl;
@@ -249,16 +258,18 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
        std::cout << messagestring << std::endl;
        std::cout << "Ninterval (01 : 12) " << Ninterval01 << " : " << Ninterval12 << std::endl;
        std::cout << "TransitionEdge (01 : 12) " << TransitionEdge0pe1pe << " : " << TransitionEdge1pe2pe << std::endl;
-       TransitionEdge0pe1pe/=Ninterval01;
+       //TransitionEdge0pe1pe/=Ninterval01;
+       TransitionEdge0pe1pe = (carrier_last0pe+carrier_first1pe)/2;
        std::cout << "TransitionEdge0pe1pe will be : " << TransitionEdge0pe1pe << std::endl;
-       TransitionEdge1pe2pe/=Ninterval12;
+       //TransitionEdge1pe2pe/=Ninterval12;
+       TransitionEdge1pe2pe = (carrier_last1pe+carrier_first2pe)/2;
        gainDAC = TransitionEdge1pe2pe - TransitionEdge0pe1pe;
        double magicFactor = -0.1;   // An emprical factor to incorporate the fact that the pulse height per p.e. seems to increase as pe increase. 
        double magicFactor_threshold05 = 0.8;
        double thres_pe = 3.5;
        TransitionEdge2pe3pe = TransitionEdge1pe2pe + (1.0+magicFactor)*(thres_pe-1.0)*gainDAC;
-       Threshold05pe = TransitionEdge0pe1pe - 0.5*magicFactor_threshold05*gainDAC;
-       
+       //Threshold05pe = TransitionEdge0pe1pe - 0.5*magicFactor_threshold05*gainDAC;
+       Threshold05pe = (TransitionEdge0pe1pe+TransitionEdge1pe2pe)/2;
        
        // Displaying the fit result in the panel
        messagestring.Form("TE(0pe-1pe)DAC = %f,  TE(1pe-2pe)DAC = %f, TE(2pe-3pe)DAC = %f, Gain = %f",
@@ -384,13 +395,15 @@ void threscan_ana(TString fileName) {
    dummyCanvas->Print(outputPDFFileName+"[");
    delete dummyCanvas;
    
-   TH1F* h_gain = new TH1F("h_gain", "Gain distribution", 50, 0, 100);
+   TH1F* h_gain = new TH1F("h_gain", "Gain distribution", 50, 10, 110);
    TH1F* h_baseline_total = new TH1F("h_baseline", "Baseline distribution", 101, 150, 250);
    TH1F* h_baseline_citiroc[nCIRASAME*nASIC];
+   TH1F* h_gain_cirasame[nCIRASAME];
    TGraph* g_idgain = new TGraph(); // 0, 2304, 0, 70;
    TGraphErrors* g_idbaseline_odd = new TGraphErrors(); // 0, 2304, 0, 70;
    TGraphErrors* g_idbaseline_even = new TGraphErrors(); // 0, 2304, 0, 70;
    TGraphErrors* g_cirasamegain = new TGraphErrors();
+   TGraph* g_idgains[nCIRASAME];
    h_gain->GetXaxis()->SetTitle("Gain in DAC value");
    h_gain->GetYaxis()->SetTitle("Count");
    g_idgain->GetXaxis()->SetTitle("Global Channel");
@@ -407,6 +420,15 @@ void threscan_ana(TString fileName) {
    for(int iCIRASAME=1; iCIRASAME<=nCIRASAME; iCIRASAME++){
      double this_cirasame_gain = 0;
      int ch_count_cirasame_gain = 0;
+     TString gain_cirasame_string = Form("Gain distribution in CIRASAME%i", iCIRASAME);
+     h_gain_cirasame[iCIRASAME-1] = new TH1F(Form("h_gain_cirasame_%i", iCIRASAME), gain_cirasame_string, 300,0,150);
+      g_idgains[iCIRASAME-1] = new TGraph();
+      g_idgains[iCIRASAME-1] -> SetTitle(Form("gain cirasame%i", iCIRASAME));
+      g_idgains[iCIRASAME-1] -> GetXaxis() -> SetTitle("channel");
+      g_idgains[iCIRASAME-1] -> GetYaxis() -> SetTitle("Gain");
+      g_idgains[iCIRASAME-1] -> SetMarkerSize(1.0);
+      g_idgains[iCIRASAME-1] -> SetMarkerStyle(20);
+
       for(int iASIC=1; iASIC<=nASIC; iASIC++){
          
          Int_t gCITIROCChannel = 4*(iCIRASAME-1) + iASIC-1;
@@ -414,12 +436,14 @@ void threscan_ana(TString fileName) {
          h_baseline_citiroc[gCITIROCChannel] = new TH1F("h_baseline_citiroc", baseline_citiroc_string, 101, 150, 250);
          double TransitionEdge2pe3peASIC = 0.;
          double Threshold05peASIC = 0.;
+         double GainASIC = 0.;
          int channelCount = 0;
          double T = 0.;
          
          for(int iChannel=1; iChannel<=nChannel; ++iChannel){
             
             Int_t gChannel = 128*(iCIRASAME-1) + 32*(iASIC-1) + iChannel;
+            Int_t lChannel = 32*(iASIC-1) + iChannel;
 
             auto result = analyzeRootFile(fileName, canvasDimensionX, canvasDimensionY,
                                           iCIRASAME, iASIC, iChannel, inputFile, outputPDFFileName);
@@ -430,27 +454,31 @@ void threscan_ana(TString fileName) {
             
             h_gain->Fill(gainDAC);
             g_idgain->SetPoint(gChannel, gChannel, gainDAC);
+            g_idgains[iCIRASAME-1]->SetPoint(lChannel, lChannel, gainDAC);
             h_baseline_total->Fill(TransitionEdge0pe1pe);
             h_baseline_citiroc[gCITIROCChannel]->Fill(TransitionEdge0pe1pe);
             messagestring.Form("%5i %5i %5i %5i %8f %8f %f", gChannel, iCIRASAME, iASIC, iChannel, gainDAC, TransitionEdge2pe3pe, Threshold05pe);
             outputFile << messagestring << std::endl;
             TransitionEdge2pe3peASIC+=TransitionEdge2pe3pe;
             Threshold05peASIC+=Threshold05pe;
+            GainASIC+=gainDAC;
 
             if ((!std::isinf(gainDAC)) && (!std::isnan(gainDAC)) && (gainDAC>0.0)){
                this_cirasame_gain += gainDAC;
                ch_count_cirasame_gain++;
             }
             //this_cirasame_gain += gainDAC;
+            h_gain_cirasame[iCIRASAME-1]->Fill(gainDAC);
 
             channelCount++;
 
          }
          TransitionEdge2pe3peASIC/= (double)channelCount;
          Threshold05peASIC/=(double)channelCount;
+         GainASIC/=(double)channelCount;
          double baseline_citiroc_mean = h_baseline_citiroc[gCITIROCChannel]->GetMean();
          double baseline_citiroc_rms = h_baseline_citiroc[gCITIROCChannel]->GetRMS();
-         messagestring.Form("%i %f %f %f %f", gCITIROCChannel, baseline_citiroc_mean, baseline_citiroc_rms, TransitionEdge2pe3peASIC, Threshold05peASIC);
+         messagestring.Form("%i %f %f %f %f %f", gCITIROCChannel, baseline_citiroc_mean, baseline_citiroc_rms, TransitionEdge2pe3peASIC, Threshold05peASIC, GainASIC);
          outputFile2 << messagestring << std::endl;
 
          
@@ -468,14 +496,15 @@ void threscan_ana(TString fileName) {
       }
       //this_cirasame_gain/=(nChannel*nASIC);
       this_cirasame_gain/=ch_count_cirasame_gain;
-      cirasame_gain[iCIRASAME] = this_cirasame_gain;
+      cirasame_gain[iCIRASAME-1] = this_cirasame_gain;
       g_cirasamegain->SetPoint(iCIRASAME, iCIRASAME, this_cirasame_gain);
-      g_cirasamegain->SetPointError(iCIRASAME, 0, 0);
+      g_cirasamegain->SetPointError(iCIRASAME, 0.0, 1.0);
       messagestring.Form("%i %f", iCIRASAME, this_cirasame_gain);
       outputFile3 << messagestring << std::endl;
 
    }
    h_gain->Draw("");  // Gain Histogram
+   canvas2->SetGrid();
    canvas2->Print(outputPDFFileName);
    canvas2->Clear();
    double range_g_id_gain = 100.0;
@@ -486,13 +515,55 @@ void threscan_ana(TString fileName) {
      yMin_g_id_gain = 0.0;
    }
    g_idgain->GetYaxis()->SetRangeUser(yMin_g_id_gain, yMax_g_id_gain);
+   canvas2->SetGrid();
    g_idgain->Draw("AP"); // Gain vs ID
    canvas2->Print(outputPDFFileName);
    canvas2->Clear();
+
+   // Draw CIRASAME-wise gain histgrama and calculate RMS
+   double gain_cirasame_rms[nCIRASAME];
+   for (int iCIRASAME=1; iCIRASAME<=nCIRASAME; iCIRASAME++){
+      h_gain_cirasame[iCIRASAME-1]->Draw("");
+      gain_cirasame_rms[iCIRASAME-1] = h_gain_cirasame[iCIRASAME-1]->GetRMS();
+      canvas2->Print(outputPDFFileName);
+      canvas2->Clear();
+   }
+
+   // Set Errors on CIRASAME gains
+   for (int iCIRASAME=1; iCIRASAME<=nCIRASAME; iCIRASAME++){
+      g_cirasamegain->SetPointError(iCIRASAME, 0.0, gain_cirasame_rms[iCIRASAME-1]);
+   }
+
+   for(int iCIRASAME=1; iCIRASAME<=nCIRASAME; iCIRASAME++){
+      g_idgains[iCIRASAME-1]->GetYaxis()->SetRangeUser(yMin_g_id_gain, yMax_g_id_gain);
+      canvas2->SetGrid();
+      g_idgains[iCIRASAME-1]->Draw("AP");
+      g_idgains[iCIRASAME-1]->Fit("pol0");
+      double cirasame_idgain_mean = g_idgains[iCIRASAME-1]->GetFunction("pol0")->GetParameter(0);
+      double cirasame_idgain_range = yMax_g_id_gain - yMin_g_id_gain;
+      TLatex* textCirasameIdGainMean = new TLatex(1.0, cirasame_idgain_range*0.95, Form("mean %4.3f", cirasame_idgain_mean));
+      textCirasameIdGainMean->SetTextFont(42); // Helvetica
+      textCirasameIdGainMean->SetTextColor(kRed);
+      textCirasameIdGainMean->SetTextSize(0.04);
+      textCirasameIdGainMean->Draw();
+      canvas2->Print(outputPDFFileName);
+      canvas2->Clear();
+   }
    g_cirasamegain->SetMarkerSize(2);
    g_cirasamegain->SetMarkerStyle(20); // Set marker style to a filled circle
+   g_cirasamegain->RemovePoint(0);
    g_cirasamegain->Draw("AP");
+   g_cirasamegain->Fit("pol0");
+   double cirasame_gain_mean = g_cirasamegain->GetFunction("pol0")->GetParameter(0);
+   double cirasame_gain_ymax = g_cirasamegain->GetYaxis()->GetXmax();
+   double cirasame_gain_ymin = g_cirasamegain->GetYaxis()->GetXmin();
+   double cirasame_gain_range = cirasame_gain_ymax - cirasame_gain_ymin;
+   TLatex* textCirasameGainMean = new TLatex(1.0, cirasame_gain_mean+cirasame_gain_range*0.03, Form("mean %4.3f", cirasame_gain_mean));
+   textCirasameGainMean->SetTextColor(kRed);
+   textCirasameGainMean->SetTextSize(0.04);
+   textCirasameGainMean->Draw();
    canvas2->Print(outputPDFFileName);
+
    
    h_baseline_total->Draw(""); // Baseline Total
    canvas2->Print(outputPDFFileName);
