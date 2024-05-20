@@ -154,7 +154,7 @@ def format_data(run_name, cirasame_number, start, end, step):
     
 def scaler_measurement(run_name, cirasame_number, start, end, step):
     for threshold in range(start, end + 1, step):
-        logging.warning(f"CIRASAME{cirasame_number} Threshold value: {threshold}")
+        logging.warning(f"CIRASAME{cirasame_number:02d} Threshold value: {threshold}")
         set_register(cirasame_number, threshold)
         measure(run_name, cirasame_number, threshold)
         #    logging.info(scan_dac_value)

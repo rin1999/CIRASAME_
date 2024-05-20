@@ -2,6 +2,8 @@
 
 """
 Class for reading common config files written under config dir.
+
+created : 2024/05/13
 """
 
 import yaml

@@ -1,4 +1,4 @@
 # Range of threshold scan
-start : 100
-end   : 300
-step  : 10
+start : 150
+end   : 600
+step  : 1
