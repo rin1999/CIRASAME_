@@ -2,7 +2,7 @@ Analog Mux: Mux_HG
 CITIROC1:
   8-bit DAC reference: 2.5V
   DAC1 code: 1000
-  DAC2 code: 291
+  DAC2 code: 510
   EN_LG_Pdet: Enable
   EN_LG_T&H(Widlar SCA): Enable
   EN_Low_Gain_PA: Enable
@@ -10,7 +10,7 @@ CITIROC1:
   En_High_Gain_Slow Shaper: Enable
   En_Low_Gain_Slow Shaper: Enable
   LG PA bias: weakbias
-  PreAMP: HGCf_200fF
+  PreAMP: HGCf_50fF
   SCA bias: highbias
   Sel Trig Ext PSC: Enable
   Time Constant HG Shaper: 50.0ns
@@ -19,7 +19,7 @@ CITIROC1:
 CITIROC2:
   8-bit DAC reference: 2.5V
   DAC1 code: 1000
-  DAC2 code: 290
+  DAC2 code: 506
   EN_LG_Pdet: Enable
   EN_LG_T&H(Widlar SCA): Enable
   EN_Low_Gain_PA: Enable
@@ -27,7 +27,7 @@ CITIROC2:
   En_High_Gain_Slow Shaper: Enable
   En_Low_Gain_Slow Shaper: Enable
   LG PA bias: weakbias
-  PreAMP: HGCf_200fF
+  PreAMP: HGCf_50fF
   SCA bias: highbias
   Sel Trig Ext PSC: Enable
   Time Constant HG Shaper: 50.0ns
@@ -36,7 +36,7 @@ CITIROC2:
 CITIROC3:
   8-bit DAC reference: 2.5V
   DAC1 code: 1000
-  DAC2 code: 280
+  DAC2 code: 504
   EN_LG_Pdet: Enable
   EN_LG_T&H(Widlar SCA): Enable
   EN_Low_Gain_PA: Enable
@@ -44,7 +44,7 @@ CITIROC3:
   En_High_Gain_Slow Shaper: Enable
   En_Low_Gain_Slow Shaper: Enable
   LG PA bias: weakbias
-  PreAMP: HGCf_200fF
+  PreAMP: HGCf_50fF
   SCA bias: highbias
   Sel Trig Ext PSC: Enable
   Time Constant HG Shaper: 50.0ns
@@ -53,7 +53,7 @@ CITIROC3:
 CITIROC4:
   8-bit DAC reference: 2.5V
   DAC1 code: 1000
-  DAC2 code: 295
+  DAC2 code: 507
   EN_LG_Pdet: Enable
   EN_LG_T&H(Widlar SCA): Enable
   EN_Low_Gain_PA: Enable
@@ -61,7 +61,7 @@ CITIROC4:
   En_High_Gain_Slow Shaper: Enable
   En_Low_Gain_Slow Shaper: Enable
   LG PA bias: weakbias
-  PreAMP: HGCf_200fF
+  PreAMP: HGCf_50fF
   SCA bias: highbias
   Sel Trig Ext PSC: Enable
   Time Constant HG Shaper: 50.0ns
