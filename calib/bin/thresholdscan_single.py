@@ -69,6 +69,16 @@ def get_register_file_path(cirasame_number):
     register_file_path = f"{config_path}/RegisterValue.yml"
     return register_file_path
 
+def extract_info_from__register_config(cirasame_number):
+    register_file_path = get_register_file_path(cirasame_number)
+    PreAmp = [0, 0, 0, 0]
+    with open(register_file_path, 'r') as f:
+        yml_RegVal = yaml.safe_load(f)
+        for iCITIROC in range (1, 5):
+            icitiroc = f"CITIROC{iCITIROC}"
+            PreAmp[iCITIROC-1] = yml_RegVal[icitiroc]['PreAMP']
+    return PreAmp[0]
+
 def save_original_register_config(cirasame_number):
     register_file_path = get_register_file_path(cirasame_number)
     with open(register_file_path, 'r') as f:
@@ -153,8 +163,11 @@ def format_data(run_name, cirasame_number, start, end, step):
             f.write(output_str)
     
 def scaler_measurement(run_name, cirasame_number, start, end, step):
+    nstep = int((end-start+1)/step)
+    istep = 0
     for threshold in range(start, end + 1, step):
-        logging.warning(f"CIRASAME{cirasame_number:02d} Threshold value: {threshold}")
+        istep = istep + 1
+        logging.warning(f"{istep:03d}/{nstep:03d}   CIRASAME{cirasame_number:02d} Threshold value: {threshold}")
         set_register(cirasame_number, threshold)
         measure(run_name, cirasame_number, threshold)
         #    logging.info(scan_dac_value)
@@ -187,10 +200,10 @@ def prepare_output_directory(run_name, cirasame_number):
         create_directory(os.path.join(cirasame_directory, "decimal"))
     return
 
-def write_meatadata_to_log(run_name, cirasame_number, start, end, step):
+def write_meatadata_to_log(run_name, cirasame_number, start, end, step, extractedinfo):
     with open(os.path.expanduser(LOG_FILE), 'a') as file:
         current_datetime = datetime.datetime.now()
-        logtext = f"{current_datetime}: {run_name} {cirasame_number} {start} {end} {step}"
+        logtext = f"{current_datetime}: {run_name} {cirasame_number} {start} {end} {step} {extractedinfo}"
         file.write(f"{logtext}\n")
     return
 
@@ -199,8 +212,9 @@ def main(run_name, cirasame_number, start=None, end=None, step=None):
     start, end, step = get_loop_parameters(start, end, step)
     prepare_run_output_directory(run_name)
     prepare_output_directory(run_name, cirasame_number)
-    write_meatadata_to_log(run_name, cirasame_number, start, end, step)
-
+    
+    extractedinfo = extract_info_from__register_config(cirasame_number)
+    write_meatadata_to_log(run_name, cirasame_number, start, end, step, extractedinfo)
     original_register_config_file = save_original_register_config(cirasame_number)
     scaler_measurement(run_name, cirasame_number, start, end, step) # loop
     restore_original_register_config(cirasame_number, original_register_config_file)

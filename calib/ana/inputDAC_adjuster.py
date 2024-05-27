@@ -1,78 +1,95 @@
 #!/usr/bin/env python3
 
+"""
+Adjusting inputDAC by using data from biasDAC-adjusted scan.
+
+
+created : 2024/05/14
+"""
+
 import os
 import numpy as np
 import pandas as pd
 import cirasameSettingManager
+import matplotlib.pyplot as plt
+import argparse
+from typing import Tuple
 
 CIRASAME_ID_START = 1
-CIRASAME_ID_END = 2
-FILE_PATH = os.path.expanduser("~/cirasame/calib/ana/out/pulseheightfit_all_20240424_2300.out")
-EXCEL_PATH= os.path.expanduser("~/cirasame/calib/xlsx/test.xlsx")
+CIRASAME_ID_END = 18
+CITIROC_START = 1
+CITIROC_END = 4
 INPUTDAC_REFERENCE = 2.5
+OUTFILE_COL_NAME = ['globalID', 'cirasameID', 'citiroc', 'channel', 'gain', 'thresholdDAC', 'baseline']
+GAIN_TO_INPUTDAC = 3.806
 
-def dataframe_extract(df: pd.DataFrame, cirasameID: int):
-    cirasame_df = df.loc[df['cirasameID']==float(cirasameID)]   # extracting dataframe
-    average_gain = cirasame_df['gain'].mean(skipna=True)        # average value of gain
-    stddev  = cirasame_df['gain'].std(skipna=True)              # stddev  value of gain
-    average_thresholdDAC = cirasame_df['thresholdDAC'].mean(skipna=True)
-    average_baseline = cirasame_df['baseline'].mean(skipna=True)
-    cirasame_df['gain'].fillna(average_gain, inplace=True)
-    cirasame_df['thresholdDAC'].fillna(average_thresholdDAC, inplace=True)
-    cirasame_df['baseline'].fillna(average_baseline, inplace=True)
-    return cirasame_df, average_gain
-
-def calculate_inputDAC_shift(gain_delta: list) -> list:
-    thresholdDAC2volt = 0.0022
-    inputDAC_shift = []
-    for x in gain_delta:
-        gain_delta_volt = thresholdDAC2volt*x
-        shift_inputDAC_volt = 10.3*gain_delta_volt
-        shift_inputDAC = shift_inputDAC_volt*256/INPUTDAC_REFERENCE
-        inputDAC_shift.append(int(-shift_inputDAC))
-    return inputDAC_shift
-
-
-def main():
-
-    column = ['globalID', 'cirasameID', 'citiroc', 'channel', 'gain', 'thresholdDAC', 'baseline']
-    df = pd.read_csv(FILE_PATH, sep="\s+", dtype=float, header=None)
-    df.columns = column
-    pd.set_option('display.max_rows', 900)
-    excel_df_dict = pd.read_excel(EXCEL_PATH, engine='openpyxl', sheet_name=None)   # loading excel book
-    
-    # loop for each cirasame
-    for cirasameID in range(CIRASAME_ID_START,CIRASAME_ID_END+1):    
-        print(f"================Now Working on cirasame{cirasameID}================")
-        working_excel_sheet = f"CIRASAME{cirasameID}"
-        inputDAC_prev = excel_df_dict[working_excel_sheet]['Bias Indivisual'].to_list()
-        cirasame_df, average_gain = dataframe_extract(df, cirasameID)
-        gain_delta = []                                             # difference between gain and average
-
-        # loop for citiroc
-        for citiroc_num in range(1,5):
-            citiroc_df = cirasame_df.loc[cirasame_df['citiroc']==citiroc_num]
-
-            # loop for channel
-            for ch in range(1, 33):
-                row = citiroc_df.loc[citiroc_df['channel']==ch]
-                delta = float(row['gain'] - average_gain)
-                gain_delta.append(delta)
-
-        inputDAC_shift = calculate_inputDAC_shift(gain_delta)
-        shifted_inputDAC = [x+y for x,y in zip(inputDAC_prev, inputDAC_shift)]  # list of inputDAC after adjustment
-
-        # re-writing new inputDAC value to dataframe
-        shifted_inputDAC_series = pd.Series(shifted_inputDAC)
-        excel_df_dict[working_excel_sheet]['Bias Indivisual'] = shifted_inputDAC_series
-        
-    print(excel_df_dict.items())
-    
-    # re-writing excel
-    with pd.ExcelWriter(EXCEL_PATH, engine="openpyxl") as writer:
-        for sheet, dataframe in excel_df_dict.items():
+def rewrite_xlsx(workbook: dict, xlsxfilepath: str) -> None:
+    with pd.ExcelWriter(xlsxfilepath, engine='openpyxl') as writer:
+        for sheet, dataframe in workbook.items():
             dataframe.to_excel(writer, sheet_name=sheet, index=False)
 
+def get_xlsx(xlsxfilepath: str) -> dict:
+    data = pd.read_excel(xlsxfilepath, sheet_name=None, engine='openpyxl')
+    return data
 
-if __name__=="__main__":
-    main()
+def get_outfile(outfilepath: str) -> Tuple[dict,float]:
+    data = pd.read_csv(outfilepath, sep='\s+', header=None)
+    data.columns = OUTFILE_COL_NAME
+    gain_mean_all = data['gain'].mean(skipna=True)
+    data_dict = {}
+    for i_cirasame in range(CIRASAME_ID_START, CIRASAME_ID_END+1):
+        data_dict[f'CIRASAME{i_cirasame}'] = data[data['cirasameID']==i_cirasame]
+    return data_dict , gain_mean_all
+
+def shift_inputDAC(inputDAC_series: pd.Series, gain_series: pd.Series, gain_mean_cirasame: float) -> pd.Series:
+    gain_series = gain_series.fillna(gain_mean_cirasame)
+    gain_series = gain_series.mask((gain_series <= gain_mean_cirasame-10) & (gain_mean_cirasame+10 <= gain_series), gain_mean_cirasame)
+    gain_diff_series = gain_series - gain_mean_cirasame
+    print(f"mean_cirasame = {gain_mean_cirasame}")
+    print(f"gain_diff mean = {gain_diff_series.mean()}")
+    #if gain_diff_series.mean() != 0.0:
+    #    print(gain_diff_series.to_list())
+    inputDAC_list = []
+    for inputDAC, gain_diff in zip(inputDAC_series.to_list(), gain_diff_series.to_list()):
+        inputDAC_list.append(int(inputDAC - GAIN_TO_INPUTDAC*gain_diff))
+        
+    inputDAC_series_return = pd.Series(inputDAC_list)
+    return inputDAC_series_return
+
+
+def loop_process(workbook: dict, out: dict, i_cirasame: int, gain_mean_all: float) -> dict:
+    print(f'processing cirasame{i_cirasame}')
+    sheetname = f'CIRASAME{i_cirasame}'
+    inputDAC_series = workbook[sheetname]['Bias Individual']
+    gain_series = out[sheetname]['gain']
+    gain_mean_cirasame = gain_series.dropna().loc[(gain_series >= gain_mean_all-20) & (gain_series <= gain_mean_all+20)].mean()
+    inputDAC_series_shifted = shift_inputDAC(inputDAC_series, gain_series, gain_mean_cirasame)
+    workbook[sheetname]['Bias Individual'] = inputDAC_series_shifted
+
+    #print(f"gain of cirasame{i_cirasame} = {gain_series}")
+    #print(f"shifted inputDAC cirasame{i_cirasame} = {inputDAC_series_shifted}")
+
+    return workbook
+
+
+def main(outfilepath: str, xlsxfilepath:str, isExecute: bool):
+    workbook           = get_xlsx(xlsxfilepath)
+    out, gain_mean_all = get_outfile(outfilepath)
+    print(f"mean_all = {gain_mean_all}")
+    for i_cirasame in range(CIRASAME_ID_START, CIRASAME_ID_END+1):
+        workbook = loop_process(workbook, out, i_cirasame, gain_mean_all)
+
+    if isExecute:
+        rewrite_xlsx(workbook, xlsxfilepath)
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-o', '--outfile', required=True, type=str, help='your out file path here')
+    parser.add_argument('-e', '--excel', required=True, type=str, help='your xlsx file path here')
+    parser.add_argument('-x', '--execute', action='store_true', help="Execute the script (default: dry run)")
+    #parser.add_argument('-m', '--mode', required=True, type=str, choices=["ID", "ASIC"], help='(ID :use average gain of cirasame and adjust ID indivisually) (ASIC :use average gain of cirasame and adjust citiroc)')
+    args = parser.parse_args()
+    outfilepath = os.path.expanduser(args.outfile)
+    xlsxfilepath= os.path.expanduser(args.excel)
+
+    main(outfilepath,xlsxfilepath,args.execute)

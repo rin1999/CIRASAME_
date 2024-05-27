@@ -38,8 +38,9 @@ def process_data(run_name, iCIRASAME, iASIC):
     files = os.listdir(dir_name)
     files_with_extension = [file for file in files if file.endswith(f".txt")]
     dat_files = sorted(files_with_extension)
-    print(f"dir_name {dir_name}")
-    print(f"dat_files {dat_files}")
+    print(f"Now processing CIRASAME{iCIRASAME}, CITIROC{iASIC}")
+    #print(f"dir_name {dir_name}")
+    #print(f"dat_files {dat_files}")
 
     col_name = ['DAC_value']
     for i in range_i:
@@ -84,7 +85,7 @@ def main():
     
     for iCIRASAME in range(1, 19):
         for iASIC in range(1, 5):
-            process_data(args.run_name, iCIRASAME, iASIC)
+            process_data(args.run_name.strip(), iCIRASAME, iASIC)
 
 if __name__ == "__main__":
     main()
