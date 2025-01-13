@@ -1,3 +1,6 @@
 [submodule "CitirocControlSoft"]
 	path = CitirocControlSoft
 	url = https://github.com/rin1999/CitirocControlSoft.git
+[submodule "CirasameControlSoft"]
+	path = CirasameControlSoft
+	url = https://github.com/rin1999/CirasameControlSoft.git
