@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "threscan_ana.C": "cpp",
+        "fdat2root.C": "cpp",
+        "tuple": "cpp",
+        "threscan_ana copy.C": "cpp",
+        "threscan_ana_2.C": "cpp",
+        "threscan_ana_fit_algorithm_changed.C": "cpp",
+        "threscan_ana_newfit.C": "cpp",
+        "ostream": "cpp",
+        "threscan_ana_current.C": "cpp",
+        "dat2root.C": "cpp",
+        "threscan_ana_newfit copy.C": "cpp",
+        "make_scan_fig.C": "cpp",
+        "a.C": "cpp",
+        "root2pdf.C": "cpp",
+        "threscan_ana_working.C": "cpp",
+        "test.C": "cpp"
+    }
+}

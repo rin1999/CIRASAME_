@@ -1,371 +1,436 @@
-.x dat2root.C("testdata.dat")
-.ls
+.x fdat2root.C("../data_formated/thresholdscan_20240516_1440")
+.x threscan_ana.C("root/thresholdscan_20240516_1440.root")
 .q
-TFile *_file0 = TFile::Open("output.root")
-.ls
-CR1->Draw()
-c1->SetLogy
-c1->SetLogy()
-.x pulseheightfit.C()
+.x fdat2root.C("../data_formated/thresholdscan_20240516_1500")
+.x threscan_ana.C("root/thresholdscan_20240516_1500.root")
 .q
-.x pulseheightfit.C()
-.ls
+.x fdat2root.C("../data_formated/thresholdscan_20240516_1700")
+.x threscan_ana.C("root/thresholdscan_20240516_1700.root")
 .q
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-hist->Draw()
-.ls
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
+.x fdat2root.C("../data_formated/thresholdscan_20240516_1730")
+.x threscan_ana.C("root/thresholdscan_20240516_1730.root")
 .q
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
-.x pulseheightfit.C ()
-.x pulseheightfit.C()
-.x pulseheightfit.C()
+.x fdat2root.C("../data_formated/thresholdscan_20240516_1830")
+.x threscan_ana.C("root/thresholdscan_20240516_1830.root")
+.q
+.x threscan_ana_2.C("root/thresholdscan_20240516_1830.root")
+.q
+.x threscan_ana_2.C("root/thresholdscan_20240516_1830.root")
+.q
+.x threscan_ana_2.C("root/thresholdscan_20240516_0000.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_1830.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_1830.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_1830.root")
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240516_2240")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C++("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C++("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C++("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_0000.root")
+.x threscan_ana.C("root/thresholdscan_20240516_1000.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.x threscan_ana.C("root/thresholdscan_20240516_2240.root")
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240517_1700")
+.x threscan_ana.C("root/thresholdscan_20240517_1700.root")
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240518_1630")
+.x threscan_ana.C("root/thresholdscan_20240518_1630.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240518_1630.root")
+.q
+.x fdat2root.C("../data_formated/thresholdscan_20240518_1830")
+.x threscan_ana.C("root/thresholdscan_20240518_1830.root")
 .q
 .q
-.x fdat2root.C(, , )
-.x fdat2root.C(, , )
-.x fdat2root.C(, , )
-.x fdat2root.C(, , )
-.x fdat2root.C(, , )
-.x fdat2root.C(, , )
-.x fdat2root.C(, , )
-.x fdat2root.C(, , )
-.x fdat2root.C()
-.x fdat2root.C()
-.x fdat2root.C()
-.x fdat2root.C()
-.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test\_1 false)
-.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test\_2 false)
-.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test\_3 false)
-.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test\_4 false)
-.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test_1 false)
-.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test_2 false)
-.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test_3 false)
-.x fdat2root.C(../data_formated/thresholdscan_20240419_1010 test/test_4 false)
+.x fdat2root.C("../data_formated/thresholdscan_20240518_2300")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240419_1010.root")
-.x pulseheightfit_all.C+("root/thresholdscan_20240419_1010.root")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 fg
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
-.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240419_1010.root")
-.x fdat2root.C("../data_formated/thresholdscan_20240421_0212")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240421_0212.root")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
-.x fdat2root.C("../data_formated/thresholdscan_20240421_0614")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
+fg
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root"
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root"
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root"
-.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root")
-.x pulseheightfit_all.C("root/thresholdscan_20240421_0614.root")
-.x fdat2root.C("../data_formated/thresholdscan_20240421_0908")
-.x pulseheightfit_all.C("root/thresholdscan_20240421_0908.root")
-.x fdat2root.C("../data_formated/thresholdscan_20240421_0908")
-.x pulseheightfit_all.C("root/thresholdscan_20240421_0908.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240519_1230")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
 .q
+.x fdat2root.C("../data_formated/thresholdscan_20240519_1230")
+.x threscan_ana.C("root/thresholdscan_20240518_2300.root")
+.x threscan_ana.C("root/thresholdscan_20240519_1230.root")
 .q
-.x fdat2root.C("../data_formated/thresholdscan_20240421_2200")
-.x pulseheightfit_all.C("root/thresholdscan_20240421_2200.root")
-.x fdat2root.C("../data_formated/thresholdscan_20240422_0230")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240422_0230.root");
+.x threscan_ana.C("root/thresholdscan_20240519_1230.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240422_0230.root");
+.x threscan_ana.C("root/thresholdscan_20240519_1230.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240422_0230.root");
+.x threscan_ana.C++("root/thresholdscan_20240519_1230.root")
 .q
+.x threscan_ana.C++("root/thresholdscan_20240519_1230.root")
 .q
-.x fdat2root.C++("../data_formated/thresholdscan_20240423_1400")
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1400.root")
+.x threscan_ana.C++("root/thresholdscan_20240519_1230.root")
 .q
-.x fdat2root.C("../data_formated/thresholdscan_20240423_1440")
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1440.root")
+.x threscan_ana.C++("root/thresholdscan_20240519_1230.root")
 .q
-.x fdat2root.C("../data_formated/thresholdscan_20240423_1440")
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1440.root")
-ls
+.x threscan_ana.C++("root/thresholdscan_20240519_1230.root")
 .q
-.x fdat2root.C++("../data_formated/thresholdscan_20240423_1620")
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x threscan_ana.C++("root/thresholdscan_20240519_1230.root")
 .q
+q.
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1440.root")
+.x threscan_ana.C++("root/thresholdscan_20240519_1230.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x threscan_ana.C++("root/thresholdscan_20240519_1230.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240519_1500")
+.x threscan_ana.C++("root/thresholdscan_20240519_1500.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240519_1640")
+.x threscan_ana.C++("root/thresholdscan_20240519_1640.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x threscan_ana.C("root/thresholdscan_20240519_1640.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1640.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240519_1230.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240516_1000.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1620.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240520_1030")
+.x threscan_ana_newfit.C("root/thresholdscan_20240520_1030.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240520_1030.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1440.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240520_1140")
+.x threscan_ana_newfit.C("root/thresholdscan_20240520_1140.root")
 .q
-.x fdat2root.C++("../data_formated/thresholdscan_20240423_1800")
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_1800.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240520_1240")
+.x threscan_ana_newfit.C("root/thresholdscan_20240520_1240.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240520_1420")
+.x threscan_ana_newfit.C("root/thresholdscan_20240520_1420.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240520_1420.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240520_1420.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240520_1420.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240520_1420.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x threscan_ana_newfit.C("../data_formated/thresholdscan_20240522_0630")
+.x fdat2root.C("../data_formated/thresholdscan_20240522_0630")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240522_0630.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240522_1930")
+.x threscan_ana_newfit.C("root/thresholdscan_20240522_1930.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240522_2300")
+.x threscan_ana_newfit.C("root/thresholdscan_20240522_2300.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240523_1230")
+.x threscan_ana_newfit.C("root/thresholdscan_20240523_1230.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x dat2root.C
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240423_2000.root")
+.x dat2root.C
+.1
 .q
+.x dat2root.C
 .q
-.x fdat2root.C++("../data_formated/thresholdscan_20240424_2100")
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240524_1215")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1215.root")
 .q
+.x fdat2root.C("../data_formated/thresholdscan_20240524_1330")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1330.root")
 .q
-TFile *_file0 = TFile::Open("root/thresholdscan_20240424_2100.root")
-.ls
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1330.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1330.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1330.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1330.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1330.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240524_1415")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1415.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1415.root")
 .q
-.x fdat2root.C++("../data_formated/thresholdscan_20240424_2100")
+.x fdat2root.C("../data_formated/thresholdscan_20240524_1530")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1530.root")
 .q
-.x fdat2root.C++("../data_formated/thresholdscan_20240424_2100")
+.x fdat2root.C("../data_formated/thresholdscan_20240524_1900")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1900.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240524_2020")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_2020.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_2020.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_2020.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240525_1730")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1730.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240525_1900")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2100.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x fdat2root.C("../data_formated/thresholdscan_20240424_2215")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2215.root")
-cd bin
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x fdat2root.C("../data_formated/thresholdscan_20240424_2300")
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C++("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x fdat2root.C("../data_formated/biasscan/biasscan_20240425_1635")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-TFile *_file0 = TFile::Open("root/biasscan_20240425_1635.root")
-.ls
-tbrowser b1
-Tbrowser b1
-Tbrowser b1
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-TFile *_file0 = TFile::Open("root/biasscan_20240425_1635.root")
-Tbrowser b1
-TBrowser b1
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-TFile *_file0 = TFile::Open("root/biasscan_20240425_1635.root")
-TBrowser b1
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-TFile *_file0 = TFile::Open("root/biasscan_20240425_1635.root")
-.ls
-tree->Draw("g001_01_01")
-g001_01_01->Draw()
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240525_1900.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x dat2root.C("../data_formated/thresholdscan_20240526_1430")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1430.root")
+.x dat2root.C("../data_formated/thresholdscan_20240526_1430")
+.x fdat2root.C("../data_formated/thresholdscan_20240526_1430")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1430.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1430.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240526_1500")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1500.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1500.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1500.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1500.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1500.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2300.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240526_1610")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1610.root")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
+.x fdat2root.C("../data_formated/thresholdscan_20240526_1650")
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240526_1650.root")
+git status
 .q
-.x pulseheightfit_all.C("root/thresholdscan_20240424_2100.root")
+.x dat2root.C("../data/thresholdscan_test")
+.x dat2root.C("../data/thresholdscan_test")
+.q
+.x threscan_ana_newfit.C("root/thresholdscan_test.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_1414")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_1414.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_1450")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_1450.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_1625")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_1625.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_1710")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_1710.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_1745")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_1745.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_1825")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_1825.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_1905")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_1905.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_1940")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_1940.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_2015")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_2015.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_2210")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_2210.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_2300")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_2300.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240530_2345")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_2345.root")
+.q
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_2345.root")
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_2345.root")
+.q
+.x threscan_ana_newfit.C("root/thresholdscan_20240530_2345.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240531_0200")
+.x threscan_ana_newfit.C("root/thresholdscan_20240531_0200.root")
+.q
+.x dat2root.C("../data/thresholdscan_20240531_0300")
+.x threscan_ana_newfit.C("root/thresholdscan_20240531_0300.root")
+.q
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1415.root")
+.q
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1415.root")
+.q
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1415.root")
+.q
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1415.root")
+.q
+.x threscan_ana_newfit.C("root/thresholdscan_20240524_1415.root")
+.q
+.x dat2root.C("../raw/test_20240830")
+.q
+.x threscan_ana_newfit.C("../data/thresholdscan_test_20240830")
+.q
+.x dat2root.C("../data/thresholdscan_test_20240830")
+.x threscan_ana_newfit.C("root/thresholdscan_test_20240830.root")
+.q
+.x make_scan_fig.C("../data/thresholdscan_20240520_1030")
+.x make_scan_fig.C("root/thresholdscan_20240520_1030.root")
+.q
+.x make_scan_fig.C("root/thresholdscan_20240520_1030.root")
+.q
+.x make_scan_fig.C("root/thresholdscan_20240520_1030.root")
+.x make_scan_fig.C("root/thresholdscan_20240520_1030.root")
+.q
+.x make_scan_fig.C("root/thresholdscan_20240520_1140.root")
+.q
+.x make_scan_fig.C("root/thresholdscan_20240520_1240.root")
+.q
+.x make_scan_fig.C("root/thresholdscan_20240520_1420.root")
+.x threscan_ana_newfit.C("../data/thresholdscan_20241004_1339")
+.q
+.x threscan_ana_newfit.C("20241004_1339")
+.q
+.x threscan_ana_newfit.C("root/thresholdscan_20241004_1339.root")
+.q
+.x dat2root.C("../data/thresholdscan_20241203_2130")
+.x threscan_ana.C("root/thresholdscan_20241203_2130.root")
+.x threscan_ana.C("../root/thresholdscan_20241203_2130")
+cd ../
+.q
+.x threscan_ana.C("root/thresholdscan_20241203_2130.root")
+.q
+.x threscan_ana.C("root/thresholdscan_20241203_2130.root")
+.q
+.x dat2root.C("../data/thresholdscan_20241210_1130")
+.q
+.x threscan_ana.C("root/thresholdscan_20241210_1130.root")
 .q

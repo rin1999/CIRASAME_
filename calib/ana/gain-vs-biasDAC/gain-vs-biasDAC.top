@@ -1,0 +1,3 @@
+set order x y
+set file input gain-vs-biasDAC.dat
+plot

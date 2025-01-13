@@ -2,9 +2,11 @@
 
 cirasameid=00000000$1
 
-yaml_dir="../CIRASAME_calib/yaml_files/cirasame0${cirasameid: -2}"
+path_to_cirasame=~/cirasame
 
-exec_dir='../CitirocControlSoft/bin'
+yaml_dir="$path_to_cirasame/calib/config/cirasame0${cirasameid: -2}"
+
+exec_dir="$path_to_cirasame/CitirocControlSoft/bin"
 exec_bin="$exec_dir/femcitiroc_control"
 exec_arg_ip="-ip=192.168.2.1${cirasameid: -2}"
 exec_arg_yaml="-yaml=$yaml_dir/DiscriMask.yml -yaml=$yaml_dir/InputDAC.yml -yaml=$yaml_dir/RegisterValue.yml"

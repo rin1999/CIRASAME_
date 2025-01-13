@@ -1,0 +1,7 @@
+set order x y
+set limit x from 45 to 60
+set limit y from 0 to 400
+set grid on
+56.32 290
+56.89 325
+plot

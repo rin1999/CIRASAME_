@@ -63,40 +63,135 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
         hist->Fill(log_y);
     }
 
-    TF1* fitFunc = new TF1("fitFunc", "gaus(0) + gaus(3) + gaus(6) + [9]", hist->GetXaxis()->GetXmin(), hist->GetXaxis()->GetXmax());
+    //TF1* fitFunc = new TF1("fitFunc", "gaus(0) + gaus(3) + gaus(6) + [9]", hist->GetXaxis()->GetXmin(), hist->GetXaxis()->GetXmax());
 
     // Set the fitting range (e.g., from -1 to 1 in log scale)
     double fitRangeMin = 3.0; // Set the minimum value for fitting region
     double fitRangeMax = 8.0;  // Set the maximum value for fitting region
-    fitFunc->SetRange(fitRangeMin, fitRangeMax);    
+    //fitFunc->SetRange(fitRangeMin, fitRangeMax);    
 
     // Set initial parameters for the first Gaussian
-    fitFunc->SetParameter(0, 4.0);        // Amplitude Initial Value
-    fitFunc->SetParameter(1, 7.2);        // Mean Initial Value
-    fitFunc->SetParameter(2, 0.1);        // Sigma Initial Value
-    fitFunc->SetParLimits(0, 2, 8);       // Amplitude Range
-    fitFunc->SetParLimits(1, 5.0, 8);     // Mean Range
-    fitFunc->SetParLimits(2, 0.05, 0.2);  // Sigma Range
+    //fitFunc->SetParameter(0, 4.0);        // Amplitude Initial Value
+    //fitFunc->SetParameter(1, 7.2);        // Mean Initial Value
+    //fitFunc->SetParameter(2, 0.1);        // Sigma Initial Value
+    //fitFunc->SetParLimits(0, 2, 8);       // Amplitude Range
+    //fitFunc->SetParLimits(1, 5.0, 8);     // Mean Range
+    //fitFunc->SetParLimits(2, 0.05, 0.2);  // Sigma Range
 
     // Set initial parameters for the second Gaussian
-    fitFunc->SetParameter(3, 10.0);        // Amplitude
-    fitFunc->SetParameter(4, 5.5);        // Mean
-    fitFunc->SetParameter(5, 0.1);        // Sigma
-    fitFunc->SetParLimits(3, 3.0, 30.0);       // Amplitude Range
-    fitFunc->SetParLimits(4, 5.0, 6.5);     // Mean Range
-    fitFunc->SetParLimits(5, 0.1, 0.2);   // Sigma Range
+    //fitFunc->SetParameter(3, 10.0);        // Amplitude
+    //fitFunc->SetParameter(4, 5.5);        // Mean
+    //fitFunc->SetParameter(5, 0.1);        // Sigma
+    //fitFunc->SetParLimits(3, 3.0, 30.0);       // Amplitude Range
+    //fitFunc->SetParLimits(4, 5.0, 6.5);     // Mean Range
+    //fitFunc->SetParLimits(5, 0.1, 0.2);   // Sigma Range
 
     // Set initial parameters for the third Gaussian
-    fitFunc->SetParameter(6, 10.0);        // Amplitude
-    fitFunc->SetParameter(7, 4.7);        // Mean
-    fitFunc->SetParameter(8, 0.1);        // Sigma
-    fitFunc->SetParLimits(6, 2.0, 20.0);     // Amplitude Range
-    fitFunc->SetParLimits(7, 4.0, 5.0);     // Mean Range
-    fitFunc->SetParLimits(8, 0.1, 0.15);   // Sigma Range
+    //fitFunc->SetParameter(6, 10.0);        // Amplitude
+    //fitFunc->SetParameter(7, 4.7);        // Mean
+    //fitFunc->SetParameter(8, 0.1);        // Sigma
+    //fitFunc->SetParLimits(6, 2.0, 20.0);     // Amplitude Range
+    //fitFunc->SetParLimits(7, 4.0, 5.0);     // Mean Range
+    //fitFunc->SetParLimits(8, 0.1, 0.15);   // Sigma Range
 
     // Set initial parameters for the constant background
-    fitFunc->SetParameter(9, 0.1);        // Constant Initial Value
-    fitFunc->SetParLimits(9, 0.01, 0.1);  // Constant Range
+    //fitFunc->SetParameter(9, 0.1);        // Constant Initial Value
+    //fitFunc->SetParLimits(9, 0.01, 0.1);  // Constant Range
+
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////// new fitting method
+    int n_bins = hist -> GetNbinsX();
+    std::vector<std::tuple<int, double>> peak_candidate;
+    double peak[3];
+    for (int bin = n_bins-1; bin>0; bin--){
+      double bin_content = hist->GetBinContent(bin);
+      if (bin_content>=10){
+         double bin_center = hist->GetBinCenter(bin);
+         peak_candidate.push_back(std::make_tuple(bin, bin_center));
+      }
+    }
+    int n_candidate = peak_candidate.size();
+    std::tuple<int, double> previous_peak = std::make_tuple(0,0.);
+    int i_empty = 0;
+    //std::cout<<"n_candidate is   "<<n_candidate<<std::endl;
+    for (int i=0; i<n_candidate; i++){
+      std::tuple<int, double> current_bin = peak_candidate[i];
+      std::cout<<"processing bin No:"<<std::get<0>(current_bin)  <<"   bin Value:"<<std::get<1>(current_bin)  <<std::endl;
+      std::cout<<"previous bin No  :"<<std::get<0>(previous_peak)<<"   bin Value:"<<std::get<1>(previous_peak)<<std::endl;
+      int bin_diff = std::get<0>(current_bin)-std::get<0>(previous_peak);
+      std::cout<<"bin No diff is   :"<<bin_diff<<std::endl;
+      if (bin_diff == -1){
+         peak[i_empty-1] = (peak[i_empty-1] + std::get<1>(current_bin))/2.;
+         std::cout<<"re-filling "<<peak[i_empty-1]<<std::endl;
+         previous_peak = current_bin;
+      }else{
+         peak[i_empty] = std::get<1>(current_bin);
+         std::cout<<"filling "<<peak[i_empty]<<std::endl;
+         previous_peak = current_bin;
+         i_empty++;
+      }
+      if(i_empty>=3){
+         break;
+      }
+    }
+    std::cout<<">>>>>>>>>>3 initial peaks before fitting are   "<<peak[0]<<"   "<<peak[1]<<"   "<<peak[2]<<std::endl;
+
+    
+    TF1* fitFunc1 = new TF1("fitFunc1", "gaus(0) + [3]", hist->GetXaxis()->GetXmin(), hist->GetXaxis()->GetXmax());
+    fitFunc1->SetRange(fitRangeMin, fitRangeMax);   
+    // initial parameter (1st gaussian)
+    fitFunc1->SetParameter(0, 10.0);                           // Amplitude Initial Value
+    fitFunc1->SetParameter(1, peak[0]);                            // Mean Initial Value
+    fitFunc1->SetParameter(2, 0.1);                            // Sigma Initial Value
+    fitFunc1->SetParLimits(0, 5, 15);                          // Amplitude Range
+    fitFunc1->SetParLimits(1, peak[0]-0.5, peak[0]+0.5);                           // Mean Range
+    fitFunc1->SetParLimits(2, 0.1, 0.2);                      // Sigma Range
+    fitFunc1->SetParameter(3, 0.1);                            // Constant Initial Value
+    fitFunc1->SetParLimits(3, 0.01, 0.1);                      // Constant Range
+    hist->Fit(fitFunc1, "QR+");
+
+    double fitRangeMax2 = fitFunc1->GetParameter(1);
+
+    TF1* fitFunc2 = new TF1("fitFunc2", "gaus(0) + [3]", hist->GetXaxis()->GetXmin(), hist->GetXaxis()->GetXmax());
+    fitFunc2->SetRange(fitRangeMin, fitRangeMax);   
+    // initial parameter (2nd gaussian)
+    fitFunc2->SetParameter(0, 20.0);                                 // Amplitude Initial Value
+    fitFunc2->SetParameter(1, peak[1]);                     // Mean Initial Value
+    fitFunc2->SetParameter(2, 0.4);                                 // Sigma Initial Value
+    fitFunc2->SetParLimits(0, 10, 40);                               // Amplitude Range
+    fitFunc2->SetParLimits(1, peak[1]-0.5, peak[1]+0.5);   // Mean Range
+    fitFunc2->SetParLimits(2, 0.05, 0.15);                           // Sigma Range
+    fitFunc2->SetParameter(3, 0.1);                                  // Constant Initial Value
+    fitFunc2->SetParLimits(3, 0.01, 0.1);                            // Constant Range
+    hist->Fit(fitFunc2, "QR+");
+
+    double fitRangeMax3 = fitFunc2->GetParameter(1);
+
+    TF1* fitFunc3 = new TF1("fitFunc3", "gaus(0) + [3]", hist->GetXaxis()->GetXmin(), hist->GetXaxis()->GetXmax());
+    fitFunc3->SetRange(fitRangeMin, fitRangeMax);   
+    // initial parameter (3rd gaussian)
+    fitFunc3->SetParameter(0, 20.0);                                 // Amplitude Initial Value
+    fitFunc3->SetParameter(1, peak[2]);                     // Mean Initial Value
+    fitFunc3->SetParameter(2, 0.15);                                 // Sigma Initial Value
+    fitFunc3->SetParLimits(0, 10, 40);                               // Amplitude Range
+    fitFunc3->SetParLimits(1, peak[2]-0.5, peak[2]+0.5);   // Mean Range
+    fitFunc3->SetParLimits(2, 0.05, 0.15);                           // Sigma Range
+    fitFunc3->SetParameter(3, 0.1);                                  // Constant Initial Value
+    fitFunc3->SetParLimits(3, 0.01, 0.1);                            // Constant Range
+    hist->Fit(fitFunc3, "QR+");
+
+
+    double countRate0peLog10Amp = fitFunc1->GetParameter(0);
+    double countRate1peLog10Amp = fitFunc2->GetParameter(0);
+    double countRate2peLog10Amp = fitFunc3->GetParameter(0);
+    double countRate0peLog10 = fitFunc1->GetParameter(1);
+    double countRate1peLog10 = fitFunc2->GetParameter(1);
+    double countRate2peLog10 = fitFunc3->GetParameter(1);
+    double countRate0peLog10Sigma = fitFunc1->GetParameter(2);
+    double countRate1peLog10Sigma = fitFunc2->GetParameter(2);
+    double countRate2peLog10Sigma = fitFunc3->GetParameter(3);
+
+
+    // 
 
     // Display the histogram
     TCanvas* canvas = new TCanvas("canvas", "Analysis Canvas", canvasDimensionX, canvasDimensionY);
@@ -111,8 +206,9 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     hist->GetYaxis()->SetTitle("Count");
     hist->Draw();
     //hist->Fit(fitFunc, "R", fitRangeMin, fitRangeMax);
-    hist->Fit(fitFunc, "LR");
+    //hist->Fit(fitFunc, "LR");
     // Get the count rates of 0 p.e., 1 p.e., and 2 p.e.
+    /*
     double countRate0peLog10Amp = fitFunc->GetParameter(0);
     double countRate1peLog10Amp = fitFunc->GetParameter(3);
     double countRate2peLog10Amp = fitFunc->GetParameter(6);
@@ -122,6 +218,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     double countRate0peLog10Sigma = fitFunc->GetParameter(2);
     double countRate1peLog10Sigma = fitFunc->GetParameter(5);
     double countRate2peLog10Sigma = fitFunc->GetParameter(8);
+    */
     messagestring.Form("The first 3 flat count rates (in log10) detected: %f±%f %f±%f  %f±%f",
                        countRate0peLog10, countRate0peLog10Sigma, 
                        countRate1peLog10, countRate1peLog10Sigma,
@@ -154,7 +251,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     int Ninterval01 = 0;
     int Ninterval12 = 0;
     double DACMin = 0;
-    double DACMax = 1100;
+    double DACMax = 600;
     double reception_factor = 2.0;  // expanding the blue regions in the graph, which prevents from excluding large(small)-counted points in the flat area.
 
     std::ofstream logFile;
@@ -175,6 +272,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
     double carrier_first1pe = 0.0;
     double carrier_last1pe = 0.0;
     double carrier_first2pe = 0.0;
+    double carrier_last2pe = 0.0;
     bool is_first_1pe = true;
     bool is_first_2pe = true;
 
@@ -264,7 +362,7 @@ std::tuple<double, double, double, double> analyzeRootFile(const char* fileName,
        //TransitionEdge1pe2pe/=Ninterval12;
        TransitionEdge1pe2pe = (carrier_last1pe+carrier_first2pe)/2;
        gainDAC = TransitionEdge1pe2pe - TransitionEdge0pe1pe;
-       double magicFactor = -0.1;   // An emprical factor to incorporate the fact that the pulse height per p.e. seems to increase as pe increase. 
+       double magicFactor = 0.2;   // An emprical factor to incorporate the fact that the pulse height per p.e. seems to increase as pe increase. 
        double magicFactor_threshold05 = 0.8;
        double thres_pe = 3.5;
        TransitionEdge2pe3pe = TransitionEdge1pe2pe + (1.0+magicFactor)*(thres_pe-1.0)*gainDAC;

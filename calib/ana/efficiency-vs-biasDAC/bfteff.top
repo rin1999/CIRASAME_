@@ -1,0 +1,34 @@
+set title top BFT Efficiency Study with Bias Scan
+set title x DAC
+set title y Efficiency
+set limit y from 90 to 100
+set grid on
+set order dummy x dummy y dy dummy dummy dummy dummy dummy dummy dummy dummy dummy dummy
+set file input bfteff.dat
+set legend BFT1-X
+plot
+
+set order dummy x dummy dummy dummy y dy dummy dummy dummy dummy dummy dummy dummy dummy
+set file input bfteff.dat
+set legend BFT1-U
+plot
+
+set order dummy x dummy dummy dummy dummy dummy y dy dummy dummy dummy dummy dummy dummy
+set file input bfteff.dat
+set legend BFT1-V
+plot
+
+set order dummy x dummy dummy dummy dummy dummy dummy dummy y dy dummy dummy dummy dummy
+set file input bfteff.dat
+set legend BFT2-X
+plot
+
+set order dummy x dummy dummy dummy dummy dummy dummy dummy dummy dummy y dy dummy dummy
+set file input bfteff.dat
+set legend BFT2-U
+plot
+
+set order dummy x dummy dummy dummy dummy dummy dummy dummy dummy dummy dummy dummy y dy
+set file input bfteff.dat
+set legend BFT2-V
+plot

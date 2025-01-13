@@ -1,10 +1,12 @@
 calib/data/
-calib/data_formated/
+calib/raw/
 calib/ana/out/
 calib/ana/root/
 calib/ana/log/
 calib/ana/pic/
 calib/pic/
+calib/xlsx/
+calib/config/cirasame*
 venv
 *.so
 *.d
@@ -13,9 +15,10 @@ ana/.root_hist
 yaml_files.bk/
 ana/*ACLiC*
 hul-common-lib/
+CirasameControlSoft/
+CitirocControlSoft/
 tmp/
 calib/config.bk/
 __pycache__
 *~
 *.bk
-

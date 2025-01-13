@@ -1,6 +1,10 @@
 #!/bin/bash
-for i in {1..12}
+
+BIN=~/cirasame/bin/bias_on.sh
+
+for i in {1..18}
 do
-echo ./bias_on.sh $i $1
-./bias_on.sh $i $1
+    COMMAND="$BIN $i $1"
+    echo $COMMAND
+    $COMMAND
 done
