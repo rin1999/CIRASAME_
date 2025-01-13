@@ -4,3 +4,6 @@
 [submodule "CirasameControlSoft"]
 	path = CirasameControlSoft
 	url = https://github.com/rin1999/CirasameControlSoft.git
+[submodule "temperature_monitor"]
+	path = temperature_monitor
+	url = https://github.com/rin1999/temperature_monitor.git
